@@ -1,0 +1,34 @@
+{
+  "name": "go-jsbox-location",
+  "version": "0.0.0",
+  "description": "A location addon for jsbox",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "./utils/test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/praekelt/go-jsbox-location.git"
+  },
+  "keywords": [
+    "vumi",
+    "sandbox",
+    "location"
+  ],
+  "author": "Praekelt Foundation",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/praekelt/go-jsbox-location/issues"
+  },
+  "homepage": "https://github.com/praekelt/go-jsbox-location",
+  "dependencies": {
+    "vumigo_v02": "~0.2",
+    "q": "~0.9",
+    "lodash": "~2.4.1",
+    "moment": "~2.5.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.18",
+    "jshint": "~2.4.4"
+  }
+}
