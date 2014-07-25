@@ -1,5 +1,3 @@
-//var _ = require('lodash');
-
 var vumigo = require('vumigo_v02');
 var App = vumigo.App;
 var AppTester = vumigo.AppTester;
@@ -34,8 +32,7 @@ describe('states.location', function() {
 
             tester
                 .setup.config.app({
-                    name: 'locationState-tester',
-                    responselength: '160'
+                    name: 'locationState-tester'
                 });
         });
 
@@ -46,7 +43,6 @@ describe('states.location', function() {
                 .check.interaction({
                     state:'states:test',
                     reply:'What is your address?',
-                    char_limit:160
                 })
                 .run();
 
@@ -62,7 +58,6 @@ describe('states.location', function() {
                 .check.interaction({
                     state:'states:test-custom',
                     reply:'Custom location question',
-                    char_limit:160
                     })
                 .run();
         });
