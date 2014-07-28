@@ -2015,6 +2015,102 @@ module.exports = function() {
                "status" : "OK"
             }]
         }
+    },
+
+    {
+         "request": {
+            "method": "GET",
+            "url": "http://maps.googleapis.com/maps/api/geocode/json",
+            "params": {
+                address:'Friend Street, South Africa'
+            }
+        },
+        "response": {
+            "code": 200,
+            "data": [{
+            "results" : [
+               {
+                  "address_components" : [
+                     {
+                        "long_name" : "Friend Street",
+                        "short_name" : "Friend St",
+                        "types" : [ "route" ]
+                     },
+                     {
+                        "long_name" : "Salt River",
+                        "short_name" : "Salt River",
+                        "types" : [ "sublocality_level_2", "sublocality", "political" ]
+                     },
+                     {
+                        "long_name" : "Cape Town",
+                        "short_name" : "Cape Town",
+                        "types" : [ "sublocality_level_1", "sublocality", "political" ]
+                     },
+                     {
+                        "long_name" : "Cape Town",
+                        "short_name" : "Cape Town",
+                        "types" : [ "locality", "political" ]
+                     },
+                     {
+                        "long_name" : "Cape Town",
+                        "short_name" : "Cape Town",
+                        "types" : [ "administrative_area_level_3", "political" ]
+                     },
+                     {
+                        "long_name" : "Cape Town",
+                        "short_name" : "Cape Town",
+                        "types" : [ "administrative_area_level_2", "political" ]
+                     },
+                     {
+                        "long_name" : "Western Cape",
+                        "short_name" : "WC",
+                        "types" : [ "administrative_area_level_1", "political" ]
+                     },
+                     {
+                        "long_name" : "South Africa",
+                        "short_name" : "ZA",
+                        "types" : [ "country", "political" ]
+                     },
+                     {
+                        "long_name" : "7925",
+                        "short_name" : "7925",
+                        "types" : [ "postal_code" ]
+                     }
+                  ],
+                  "formatted_address" : "Friend Street, Cape Town 7925, South Africa",
+                  "geometry" : {
+                     "bounds" : {
+                        "northeast" : {
+                           "lat" : -33.9338399,
+                           "lng" : 18.4575469
+                        },
+                        "southwest" : {
+                           "lat" : -33.934464,
+                           "lng" : 18.45667
+                        }
+                     },
+                     "location" : {
+                        "lat" : -33.9339159,
+                        "lng" : 18.456782
+                     },
+                     "location_type" : "GEOMETRIC_CENTER",
+                     "viewport" : {
+                        "northeast" : {
+                           "lat" : -33.9328029697085,
+                           "lng" : 18.4584574302915
+                        },
+                        "southwest" : {
+                           "lat" : -33.9355009302915,
+                           "lng" : 18.4557594697085
+                        }
+                     }
+                  },
+                  "types" : [ "route" ]
+               }
+            ],
+            "status" : "OK"
+         }]
+        }
     }
 
     ];
