@@ -57,6 +57,14 @@ describe('states.location', function() {
                 return new LocationState(name, tester.data.opts);
             });
 
+            app.states.add('states:test-unnest', function(name) {
+                tester.data.opts = {
+                    store_fields:['geometry.bounds'],
+                    next:'states:end'
+                };
+                return new LocationState(name, tester.data.opts);
+            });
+
             app.states.add('states:end', function(name) {
                 return new EndState(name, {
                     text: 'This is the end state.'
@@ -219,7 +227,7 @@ describe('states.location', function() {
                 .check(function(api) {
                     var contact = api.contacts.store[0];
                     assert.equal(contact.extra['location:formatted_address'],
-                            '"Friend Street, Amesbury, MA 01913, USA"');
+                            'Friend Street, Amesbury, MA 01913, USA');
                 })
                 .run();
         });
@@ -234,7 +242,7 @@ describe('states.location', function() {
                 .check(function(api) {
                     var contact = api.contacts.store[0];
                     assert.equal(contact.extra['location:formatted_address'],
-                            '"Friend Street, Boston, MA 02114, USA"');
+                            'Friend Street, Boston, MA 02114, USA');
                 })
                 .run();
         });
@@ -249,7 +257,7 @@ describe('states.location', function() {
                 .check(function(api) {
                     var contact = api.contacts.store[0];
                     assert.equal(contact.extra['location:formatted_address'], 
-                        '"Friend Street, Cape Town 7925, South Africa"');
+                        'Friend Street, Cape Town 7925, South Africa');
                 })
                 .run();
         });
@@ -266,7 +274,7 @@ describe('states.location', function() {
             })
             .check(function(api) {
                 var contact = api.contacts.store[0];
-                assert.equal(contact.extra['location:types'], '["route"]');
+                assert.equal(contact.extra['location:types:0'], 'route');
             })
             .run();
         });
@@ -358,6 +366,27 @@ describe('states.location', function() {
                 })
                 .run();
             });
+
+        it('should unnest nested parameters if the given object is nested',
+        function() {
+            return tester
+                .setup.user.state({
+                    name:'states:test-unnest'
+                })
+                .inputs("Friend Street, South Africa")
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra[
+                        'location:geometry:bounds:northeast:lat'], 
+                        '-33.9338399');
+                    assert.equal(contact.extra[
+                        'location:geometry:bounds:southwest:lng'], '18.45667');
+                })
+                .run();
+        });
 
     });
 });
