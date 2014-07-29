@@ -17,14 +17,35 @@ describe('states.location', function() {
 
             tester = new AppTester(app);
 
-            tester.data.opts = {next:'states:end'};
-
             app.states.add('states:test', function(name) {
+                tester.data.opts = {next:'states:end'};
                 return new LocationState(name, tester.data.opts);
             });
 
             app.states.add('states:test-custom', function(name) {
-                tester.data.opts = {question:'Custom location question'};
+                tester.data.opts = {
+                    question:'Custom location question',
+                    error_question:'Custom error question',
+                    refine_question:'Custom refine question',
+                    next_text:'N',
+                    previous_text:'P',
+                    store_fields:['types'],
+                    next:'states:end'
+                    };
+                return new LocationState(name, tester.data.opts);
+            });
+
+            app.states.add('states:test-limit', function(name) {
+                tester.data.opts = {
+                    options_per_page:'1'
+                };
+                return new LocationState(name, tester.data.opts);
+            });
+
+            app.states.add('states:test-charlimit', function(name) {
+                tester.data.opts = {
+                    characters_per_page:200
+                };
                 return new LocationState(name, tester.data.opts);
             });
 
@@ -189,8 +210,10 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.location_address,
-                        "Friend Street, Amesbury, MA 01913, USA");
+                    assert.equal(contact.location, JSON.stringify({
+                        formatted_address:
+                            "Friend Street, Amesbury, MA 01913, USA"
+                    }));
                 })
                 .run();
         });
@@ -204,8 +227,10 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.location_address,
-                        'Friend Street, Boston, MA 02114, USA');
+                    assert.equal(contact.location, JSON.stringify({
+                        formatted_address:
+                            'Friend Street, Boston, MA 02114, USA'
+                    }));
                 })
                 .run();
         });
@@ -219,10 +244,100 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.location_address,
-                        'Friend Street, Cape Town 7925, South Africa');
+                    assert.equal(contact.location, JSON.stringify({
+                            formatted_address:
+                                "Friend Street, Cape Town 7925, South Africa"
+                        }));
                 })
                 .run();
+        });
+
+        it('should store the requested custom fields when the result is chosen',
+        function() {
+            return tester
+            .setup.user.state({
+                name:'states:test-custom',
+            })
+            .inputs('Friend Street, South Africa')
+            .check.interaction({
+                state:'states:end'
+            })
+            .check(function(api) {
+                var contact = api.contacts.store[0];
+                assert.equal(contact.location, JSON.stringify({
+                    "types" : [ "route" ]
+                }));
+            })
+            .run();
+        });
+
+        it('should display a custom message when the custom fields are chosen',
+        function() {
+            return tester
+            .setup.user.state({
+                name:'states:test-custom'
+            })
+            .inputs('Friend Street')
+            .check.interaction({
+                state:'states:test-custom',
+                reply:[
+                    'Custom refine question',
+                    '1. Friend Street, Amesbury, MA 01913, USA',
+                    '2. Friend Street, Adams, MA 01220, USA',
+                    '3. Friend Street, Berkley, MA 02779, USA',
+                    'n. N',
+                    'p. P'
+                ].join('\n')
+            })
+            .run();
+        });
+
+        it('should display a custom error message when custom field is chosen',
+        function() {
+            return tester
+            .setup.user.state({
+                name:'states:test-custom'
+            })
+            .inputs('agx')
+            .check.interaction({
+                state:'states:test-custom',
+                reply:[
+                    'Custom error question'
+                ].join('\n')
+            })
+            .run();
+        });
+
+        it('should limit the amount of options per page when the field is set',
+        function() {
+            return tester
+            .setup.user.state({
+                name:'states:test-limit'
+            })
+            .inputs("Friend Street")
+            .check.interaction({
+                state:'states:test-limit',
+                reply:[
+                    'Please select your location from the following:',
+                    '1. Friend Street, Amesbury, MA 01913, USA',
+                    'n. Next',
+                    'p. Previous'
+                ].join('\n')
+            })
+            .run();
+        });
+
+        it('should limit the amount of characters per page when field is set',
+        function() {
+            return tester
+            .setup.user.state({
+                name:'states:test-charlimit'
+            })
+            .inputs("Friend Street")
+            .check.interaction({
+                char_limit:200
+            })
+            .run();
         });
 
     });
