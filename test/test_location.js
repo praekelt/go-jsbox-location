@@ -49,6 +49,14 @@ describe('states.location', function() {
                 return new LocationState(name, tester.data.opts);
             });
 
+            app.states.add('states:test-nested', function(name) {
+                tester.data.opts = {
+                    store_fields:['geometry.bounds.northeast.lng'],
+                    next:'states:end'
+                };
+                return new LocationState(name, tester.data.opts);
+            });
+
             app.states.add('states:end', function(name) {
                 return new EndState(name, {
                     text: 'This is the end state.'
@@ -210,10 +218,8 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.location, JSON.stringify({
-                        formatted_address:
-                            "Friend Street, Amesbury, MA 01913, USA"
-                    }));
+                    assert.equal(contact.extra['location:formatted_address'],
+                            '"Friend Street, Amesbury, MA 01913, USA"');
                 })
                 .run();
         });
@@ -227,10 +233,8 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.location, JSON.stringify({
-                        formatted_address:
-                            'Friend Street, Boston, MA 02114, USA'
-                    }));
+                    assert.equal(contact.extra['location:formatted_address'],
+                            '"Friend Street, Boston, MA 02114, USA"');
                 })
                 .run();
         });
@@ -244,10 +248,8 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.location, JSON.stringify({
-                            formatted_address:
-                                "Friend Street, Cape Town 7925, South Africa"
-                        }));
+                    assert.equal(contact.extra['location:formatted_address'], 
+                        '"Friend Street, Cape Town 7925, South Africa"');
                 })
                 .run();
         });
@@ -264,9 +266,7 @@ describe('states.location', function() {
             })
             .check(function(api) {
                 var contact = api.contacts.store[0];
-                assert.equal(contact.location, JSON.stringify({
-                    "types" : [ "route" ]
-                }));
+                assert.equal(contact.extra['location:types'], '["route"]');
             })
             .run();
         });
@@ -339,6 +339,25 @@ describe('states.location', function() {
             })
             .run();
         });
+
+        it('should understand nested parameters for field options',
+            function() {
+                return tester
+                .setup.user.state({
+                    name:'states:test-nested'
+                })
+                .inputs("Friend Street, South Africa")
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra[
+                        'location:geometry:bounds:northeast:lng'], 
+                        '18.4575469');
+                })
+                .run();
+            });
 
     });
 });
