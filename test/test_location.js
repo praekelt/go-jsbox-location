@@ -7,6 +7,8 @@ var location = require('../lib/location.js');
 var LocationState = location.LocationState;
 var assert = require('assert');
 var _ = require('lodash');
+var test_utils = vumigo.test_utils;
+var config = vumigo.fixtures.config;
 
 describe('states.location', function() {
     describe('LocationState', function() {
@@ -29,10 +31,6 @@ describe('states.location', function() {
                 return new EndState(name, {
                     text: 'This is the end state.'
                 });
-            });
-
-            app.states.add('states:test-translate', function(name) {
-                return new LocationState(name, tester.data.opts);
             });
 
             tester
@@ -349,6 +347,54 @@ describe('states.location', function() {
                     assert.equal(e.message, ['Object not.a.real.object', 
                         'was not found in the API response'].join(' '));
                 });
+        });
+
+        it('should translate the first question', 
+        function(){
+            tester.data.opts.question = test_utils.$('hello');
+
+            return tester
+                .setup.config(config())
+                .setup.user.lang('af')
+                .input()
+                .check.reply([
+                    "hallo"
+                ].join('\n'))
+                .run();
+        });
+
+        it('should translate the error question', 
+        function(){
+            tester.data.opts.error_question = test_utils.$('no!');
+            return tester
+                .setup.config(config())
+                .setup.user.lang('af')
+                .inputs('agx')
+                .check.reply([
+                    "nee!"
+                ].join('\n'))
+                .run();
+        });
+
+        it('should translate the refine question and page prompts', 
+        function(){
+            tester.data.opts.refine_question = test_utils.$('hello?');
+            tester.data.opts.next_text = test_utils.$('yes');
+            tester.data.opts.previous_text = test_utils.$('no');
+
+            return tester
+                .setup.config(config())
+                .setup.user.lang('af')
+                .input("Friend Street")
+                .check.reply([
+                    "hallo?",
+                    "1. Friend Street, Amesbury, MA 01913, USA",
+                    "2. Friend Street, Adams, MA 01220, USA",
+                    "3. Friend Street, Berkley, MA 02779, USA",
+                    "n. ja",
+                    "p. nee"
+                ].join('\n'))
+                .run();
         });
 
     });
