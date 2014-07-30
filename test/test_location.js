@@ -6,6 +6,9 @@ var EndState = vumigo.states.EndState;
 var location = require('../lib/location.js');
 var LocationState = location.LocationState;
 var assert = require('assert');
+var _ = require('lodash');
+var test_utils = vumigo.test_utils;
+var config = vumigo.fixtures.config;
 
 describe('states.location', function() {
     describe('LocationState', function() {
@@ -17,59 +20,10 @@ describe('states.location', function() {
 
             tester = new AppTester(app);
 
+            tester.data.opts = {};
+
             app.states.add('states:test', function(name) {
-                tester.data.opts = {next:'states:end'};
-                return new LocationState(name, tester.data.opts);
-            });
-
-            app.states.add('states:test-custom', function(name) {
-                tester.data.opts = {
-                    question:'Custom location question',
-                    error_question:'Custom error question',
-                    refine_question:'Custom refine question',
-                    next_text:'N',
-                    previous_text:'P',
-                    store_fields:['types'],
-                    next:'states:end'
-                    };
-                return new LocationState(name, tester.data.opts);
-            });
-
-            app.states.add('states:test-limit', function(name) {
-                tester.data.opts = {
-                    options_per_page:'1'
-                };
-                return new LocationState(name, tester.data.opts);
-            });
-
-            app.states.add('states:test-charlimit', function(name) {
-                tester.data.opts = {
-                    characters_per_page:200
-                };
-                return new LocationState(name, tester.data.opts);
-            });
-
-            app.states.add('states:test-nested', function(name) {
-                tester.data.opts = {
-                    store_fields:['geometry.bounds.northeast.lng'],
-                    next:'states:end'
-                };
-                return new LocationState(name, tester.data.opts);
-            });
-
-            app.states.add('states:test-unnest', function(name) {
-                tester.data.opts = {
-                    store_fields:['geometry.bounds'],
-                    next:'states:end'
-                };
-                return new LocationState(name, tester.data.opts);
-            });
-
-            app.states.add('states:test-error', function(name) {
-                tester.data.opts = {
-                    store_fields:['geometry.bounds', 'not.a.real.object'],
-                    next:'states:end'
-                };
+                _.defaults(tester.data.opts, {next:'states:end'});
                 return new LocationState(name, tester.data.opts);
             });
 
@@ -102,13 +56,11 @@ describe('states.location', function() {
 
         it('should request the user for a location with a custom message',
         function() {
+            tester.data.opts.question = 'Custom location question';
             return tester
-                .setup.user.state({
-                    name:'states:test-custom',
-                })
                 .start()
                 .check.interaction({
-                    state:'states:test-custom',
+                    state:'states:test',
                     reply:'Custom location question',
                     })
                 .run();
@@ -272,10 +224,8 @@ describe('states.location', function() {
 
         it('should store the requested custom fields when the result is chosen',
         function() {
+            tester.data.opts.store_fields=['types'];
             return tester
-            .setup.user.state({
-                name:'states:test-custom',
-            })
             .inputs('Friend Street, South Africa')
             .check.interaction({
                 state:'states:end'
@@ -289,13 +239,13 @@ describe('states.location', function() {
 
         it('should display a custom message when the custom fields are chosen',
         function() {
+            tester.data.opts.refine_question = "Custom refine question";
+            tester.data.opts.next_text = 'N';
+            tester.data.opts.previous_text = 'P';
             return tester
-            .setup.user.state({
-                name:'states:test-custom'
-            })
             .inputs('Friend Street')
             .check.interaction({
-                state:'states:test-custom',
+                state:'states:test',
                 reply:[
                     'Custom refine question',
                     '1. Friend Street, Amesbury, MA 01913, USA',
@@ -310,13 +260,11 @@ describe('states.location', function() {
 
         it('should display a custom error message when custom field is chosen',
         function() {
+            tester.data.opts.error_question = "Custom error question";
             return tester
-            .setup.user.state({
-                name:'states:test-custom'
-            })
             .inputs('agx')
             .check.interaction({
-                state:'states:test-custom',
+                state:'states:test',
                 reply:[
                     'Custom error question'
                 ].join('\n')
@@ -326,13 +274,11 @@ describe('states.location', function() {
 
         it('should limit the amount of options per page when the field is set',
         function() {
+            tester.data.opts.options_per_page = 1;
             return tester
-            .setup.user.state({
-                name:'states:test-limit'
-            })
             .inputs("Friend Street")
             .check.interaction({
-                state:'states:test-limit',
+                state:'states:test',
                 reply:[
                     'Please select your location from the following:',
                     '1. Friend Street, Amesbury, MA 01913, USA',
@@ -345,10 +291,8 @@ describe('states.location', function() {
 
         it('should limit the amount of characters per page when field is set',
         function() {
+            tester.data.opts.char_limit = 200;
             return tester
-            .setup.user.state({
-                name:'states:test-charlimit'
-            })
             .inputs("Friend Street")
             .check.interaction({
                 char_limit:200
@@ -357,30 +301,26 @@ describe('states.location', function() {
         });
 
         it('should understand nested parameters for field options',
-            function() {
-                return tester
-                .setup.user.state({
-                    name:'states:test-nested'
-                })
-                .inputs("Friend Street, South Africa")
-                .check.interaction({
-                    state:'states:end'
-                })
-                .check(function(api) {
-                    var contact = api.contacts.store[0];
-                    assert.equal(contact.extra[
-                        'location:geometry:bounds:northeast:lng'], 
-                        '18.4575469');
-                })
-                .run();
-            });
+        function() {
+            tester.data.opts.store_fields = ['geometry.bounds.northeast.lng'];
+            return tester
+            .inputs("Friend Street, South Africa")
+            .check.interaction({
+                state:'states:end'
+            })
+            .check(function(api) {
+                var contact = api.contacts.store[0];
+                assert.equal(contact.extra[
+                    'location:geometry:bounds:northeast:lng'], 
+                    '18.4575469');
+            })
+            .run();
+        });
 
         it('should unnest nested parameters if the given object is nested',
         function() {
+            tester.data.opts.store_fields = ['geometry.bounds'];
             return tester
-                .setup.user.state({
-                    name:'states:test-unnest'
-                })
                 .inputs("Friend Street, South Africa")
                 .check.interaction({
                     state:'states:end'
@@ -398,10 +338,8 @@ describe('states.location', function() {
 
         it('should throw an error if an object does not exit',
         function() {
+            tester.data.opts.store_fields = ['not.a.real.object'];
             return tester
-                .setup.user.state({
-                    name:'states:test-error'
-                })
                 .inputs("Friend Street")
                 .run()
                 .catch(function(e) {
@@ -409,6 +347,54 @@ describe('states.location', function() {
                     assert.equal(e.message, ['Object not.a.real.object', 
                         'was not found in the API response'].join(' '));
                 });
+        });
+
+        it('should translate the first question', 
+        function(){
+            tester.data.opts.question = test_utils.$('hello');
+
+            return tester
+                .setup.config(config())
+                .setup.user.lang('af')
+                .input()
+                .check.reply([
+                    "hallo"
+                ].join('\n'))
+                .run();
+        });
+
+        it('should translate the error question', 
+        function(){
+            tester.data.opts.error_question = test_utils.$('no!');
+            return tester
+                .setup.config(config())
+                .setup.user.lang('af')
+                .inputs('agx')
+                .check.reply([
+                    "nee!"
+                ].join('\n'))
+                .run();
+        });
+
+        it('should translate the refine question and page prompts', 
+        function(){
+            tester.data.opts.refine_question = test_utils.$('hello?');
+            tester.data.opts.next_text = test_utils.$('yes');
+            tester.data.opts.previous_text = test_utils.$('no');
+
+            return tester
+                .setup.config(config())
+                .setup.user.lang('af')
+                .input("Friend Street")
+                .check.reply([
+                    "hallo?",
+                    "1. Friend Street, Amesbury, MA 01913, USA",
+                    "2. Friend Street, Adams, MA 01220, USA",
+                    "3. Friend Street, Berkley, MA 02779, USA",
+                    "n. ja",
+                    "p. nee"
+                ].join('\n'))
+                .run();
         });
 
     });
