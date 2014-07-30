@@ -65,6 +65,14 @@ describe('states.location', function() {
                 return new LocationState(name, tester.data.opts);
             });
 
+            app.states.add('states:test-error', function(name) {
+                tester.data.opts = {
+                    store_fields:['geometry.bounds', 'not.a.real.object'],
+                    next:'states:end'
+                };
+                return new LocationState(name, tester.data.opts);
+            });
+
             app.states.add('states:end', function(name) {
                 return new EndState(name, {
                     text: 'This is the end state.'
@@ -386,6 +394,21 @@ describe('states.location', function() {
                         'location:geometry:bounds:southwest:lng'], '18.45667');
                 })
                 .run();
+        });
+
+        it('should throw an error if an object does not exit',
+        function() {
+            return tester
+                .setup.user.state({
+                    name:'states:test-error'
+                })
+                .inputs("Friend Street")
+                .run()
+                .catch(function(e) {
+                    assert(e instanceof Error);
+                    assert.equal(e.message, ['Object not.a.real.object', 
+                        'was not found in the API response'].join(' '));
+                });
         });
 
     });
