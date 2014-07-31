@@ -14,6 +14,7 @@ describe('states.location', function() {
     describe('LocationState', function() {
         var app;
         var tester;
+        var locations;
 
         beforeEach(function(){
             app = new App('states:test');
@@ -21,6 +22,8 @@ describe('states.location', function() {
             tester = new AppTester(app);
 
             tester.data.opts = {};
+
+            locations = LocationState.testing();
 
             app.states.add('states:test', function(name) {
                 _.defaults(tester.data.opts, {next:'states:end'});
@@ -39,7 +42,7 @@ describe('states.location', function() {
                 })
                 .setup(function(api) {
                     fixtures().forEach(api.http.fixtures.add);
-                    LocationState.testing.fixtures().forEach(
+                    locations.fixtures.forEach(
                         api.http.fixtures.add);
                 });
         });
@@ -401,7 +404,7 @@ describe('states.location', function() {
 
         it('should recognize user added addresses for fixtures',
         function() {
-            LocationState.testing.add_location({
+            locations.add_location({
                 request:"New Street",
                 address_list:["New Street 1", "New Street 2"]
             });
@@ -419,7 +422,7 @@ describe('states.location', function() {
 
         it('should recognize user added response objects for fixtures',
         function() {
-            LocationState.testing.add_location({
+            locations.add_location({
                 request:"Another Street",
                 response_data: {
                     results: [{
