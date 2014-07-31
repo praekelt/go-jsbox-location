@@ -11,6 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   locationstate
+   testing
 
 
 Indices and tables
