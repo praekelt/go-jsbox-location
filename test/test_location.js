@@ -14,6 +14,7 @@ describe('states.location', function() {
     describe('LocationState', function() {
         var app;
         var tester;
+        var locations;
 
         beforeEach(function(){
             app = new App('states:test');
@@ -21,6 +22,8 @@ describe('states.location', function() {
             tester = new AppTester(app);
 
             tester.data.opts = {};
+
+            locations = LocationState.testing();
 
             app.states.add('states:test', function(name) {
                 _.defaults(tester.data.opts, {next:'states:end'});
@@ -39,6 +42,8 @@ describe('states.location', function() {
                 })
                 .setup(function(api) {
                     fixtures().forEach(api.http.fixtures.add);
+                    locations.fixtures.forEach(
+                        api.http.fixtures.add);
                 });
         });
 
@@ -395,6 +400,49 @@ describe('states.location', function() {
                     "p. nee"
                 ].join('\n'))
                 .run();
+        });
+
+        it('should recognize user added addresses for fixtures',
+        function() {
+            locations.add_location({
+                request:"New Street",
+                address_list:["New Street 1", "New Street 2"]
+            });
+            return tester
+                .input("New Street")
+                .check.reply([
+                    'Please select your location from the following:',
+                    '1. New Street 1',
+                    '2. New Street 2',
+                    'n. Next',
+                    'p. Previous'
+                    ].join('\n'))
+                .run();
+        });
+
+        it('should recognize user added response objects for fixtures',
+        function() {
+            locations.add_location({
+                request:"Another Street",
+                response_data: {
+                    results: [{
+                        "formatted_address": "Another Street, Suburb",
+                        "types": ["route"]
+                    }],
+                    status:"OK"
+                }
+            });
+
+            tester.data.opts.store_fields = ['types'];
+
+            return tester
+                .input("Another Street")
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:types:0'], 'route');
+                })
+                .run();
+
         });
 
     });
