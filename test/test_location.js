@@ -444,5 +444,23 @@ describe('states.location', function() {
 
         });
 
+        it('should store the data in the user defined namespace',
+        function() {
+            tester.data.opts.store_fields = ['geometry.bounds.northeast.lng'];
+            tester.data.opts.namespace = 'from_location';
+            return tester
+            .inputs("Friend Street, South Africa")
+            .check.interaction({
+                state:'states:end'
+            })
+            .check(function(api) {
+                var contact = api.contacts.store[0];
+                assert.equal(contact.extra[
+                    'from_location:geometry:bounds:northeast:lng'], 
+                    '18.4575469');
+            })
+            .run();
+        });
+
     });
 });
