@@ -1,6 +1,6 @@
 {
   "name": "go-jsbox-location",
-  "version": "0.1.2",
+  "version": "0.1.3a",
   "description": "A location addon for jsbox",
   "main": "lib/index.js",
   "scripts": {
