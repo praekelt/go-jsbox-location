@@ -1,51 +1,54 @@
 module.exports = function() {
-    return [
-    {
-        "request": {
+   return [
+   // GET gmaps agx
+      {
+         "request": {
             "method": "GET",
             "url": "http://maps.googleapis.com/maps/api/geocode/json",
             "params": {
                 address:'agx'
             }
-        },
-        "response": {
+         },
+         "response": {
             "code": 200,
             "data": {
                "results" : [],
                "status" : "ZERO_RESULTS"
             }
-        }
-    },
+         }
+      },
 
-    {
-        "request": {
+   // GET gmaps agy
+      {
+         "request": {
             "method": "GET",
             "url": "http://maps.googleapis.com/maps/api/geocode/json",
             "params": {
                 address:'agy'
             }
-        },
-        "response": {
+         },
+         "response": {
             "code": 200,
             "data": {
                "results" : [],
                "status" : "ZERO_RESULTS"
             }
-        }
-    },
+         }
+      },
 
-    {
-        "request": {
+   // GET gmaps Friend Street
+      {
+         "request": {
             "method": "GET",
             "url": "http://maps.googleapis.com/maps/api/geocode/json",
             "params": {
                 address:'Friend Street'
             }
-        },
-        "response": {
+         },
+         "response": {
             "code": 200,
             "data": {
-                "results" : [
+               "results" : [
                   {
                      "address_components" : [
                         {
@@ -2014,104 +2017,299 @@ module.exports = function() {
                ],
                "status" : "OK"
             }
-        }
-    },
+         }
+      },
 
-    {
+   // GET gmaps Friend Street, South Africa
+      {
          "request": {
             "method": "GET",
             "url": "http://maps.googleapis.com/maps/api/geocode/json",
             "params": {
                 address:'Friend Street, South Africa'
             }
-        },
-        "response": {
+         },
+         "response": {
             "code": 200,
             "data": {
-            "results" : [
-               {
-                  "address_components" : [
-                     {
-                        "long_name" : "Friend Street",
-                        "short_name" : "Friend St",
-                        "types" : [ "route" ]
-                     },
-                     {
-                        "long_name" : "Salt River",
-                        "short_name" : "Salt River",
-                        "types" : [ "sublocality_level_2", "sublocality", "political" ]
-                     },
-                     {
-                        "long_name" : "Cape Town",
-                        "short_name" : "Cape Town",
-                        "types" : [ "sublocality_level_1", "sublocality", "political" ]
-                     },
-                     {
-                        "long_name" : "Cape Town",
-                        "short_name" : "Cape Town",
-                        "types" : [ "locality", "political" ]
-                     },
-                     {
-                        "long_name" : "Cape Town",
-                        "short_name" : "Cape Town",
-                        "types" : [ "administrative_area_level_3", "political" ]
-                     },
-                     {
-                        "long_name" : "Cape Town",
-                        "short_name" : "Cape Town",
-                        "types" : [ "administrative_area_level_2", "political" ]
-                     },
-                     {
-                        "long_name" : "Western Cape",
-                        "short_name" : "WC",
-                        "types" : [ "administrative_area_level_1", "political" ]
-                     },
-                     {
-                        "long_name" : "South Africa",
-                        "short_name" : "ZA",
-                        "types" : [ "country", "political" ]
-                     },
-                     {
-                        "long_name" : "7925",
-                        "short_name" : "7925",
-                        "types" : [ "postal_code" ]
-                     }
-                  ],
-                  "formatted_address" : "Friend Street, Cape Town 7925, South Africa",
-                  "geometry" : {
-                     "bounds" : {
-                        "northeast" : {
-                           "lat" : -33.9338399,
-                           "lng" : 18.4575469
+               "results" : [
+                  {
+                     "address_components" : [
+                        {
+                           "long_name" : "Friend Street",
+                           "short_name" : "Friend St",
+                           "types" : [ "route" ]
                         },
-                        "southwest" : {
-                           "lat" : -33.934464,
-                           "lng" : 18.45667
+                        {
+                           "long_name" : "Salt River",
+                           "short_name" : "Salt River",
+                           "types" : [ "sublocality_level_2", "sublocality", "political" ]
+                        },
+                        {
+                           "long_name" : "Cape Town",
+                           "short_name" : "Cape Town",
+                           "types" : [ "sublocality_level_1", "sublocality", "political" ]
+                        },
+                        {
+                           "long_name" : "Cape Town",
+                           "short_name" : "Cape Town",
+                           "types" : [ "locality", "political" ]
+                        },
+                        {
+                           "long_name" : "Cape Town",
+                           "short_name" : "Cape Town",
+                           "types" : [ "administrative_area_level_3", "political" ]
+                        },
+                        {
+                           "long_name" : "Cape Town",
+                           "short_name" : "Cape Town",
+                           "types" : [ "administrative_area_level_2", "political" ]
+                        },
+                        {
+                           "long_name" : "Western Cape",
+                           "short_name" : "WC",
+                           "types" : [ "administrative_area_level_1", "political" ]
+                        },
+                        {
+                           "long_name" : "South Africa",
+                           "short_name" : "ZA",
+                           "types" : [ "country", "political" ]
+                        },
+                        {
+                           "long_name" : "7925",
+                           "short_name" : "7925",
+                           "types" : [ "postal_code" ]
+                        }
+                     ],
+                     "formatted_address" : "Friend Street, Cape Town 7925, South Africa",
+                     "geometry" : {
+                        "bounds" : {
+                           "northeast" : {
+                              "lat" : -33.9338399,
+                              "lng" : 18.4575469
+                           },
+                           "southwest" : {
+                              "lat" : -33.934464,
+                              "lng" : 18.45667
+                           }
+                        },
+                        "location" : {
+                           "lat" : -33.9339159,
+                           "lng" : 18.456782
+                        },
+                        "location_type" : "GEOMETRIC_CENTER",
+                        "viewport" : {
+                           "northeast" : {
+                              "lat" : -33.9328029697085,
+                              "lng" : 18.4584574302915
+                           },
+                           "southwest" : {
+                              "lat" : -33.9355009302915,
+                              "lng" : 18.4557594697085
+                           }
                         }
                      },
-                     "location" : {
-                        "lat" : -33.9339159,
-                        "lng" : 18.456782
-                     },
-                     "location_type" : "GEOMETRIC_CENTER",
-                     "viewport" : {
-                        "northeast" : {
-                           "lat" : -33.9328029697085,
-                           "lng" : 18.4584574302915
-                        },
-                        "southwest" : {
-                           "lat" : -33.9355009302915,
-                           "lng" : 18.4557594697085
-                        }
-                     }
-                  },
-                  "types" : [ "route" ]
-               }
-            ],
-            "status" : "OK"
+                     "types" : [ "route" ]
+                  }
+               ],
+               "status" : "OK"
+            }
          }
-        }
-    }
+      },
 
-    ];
+   // GET osmaps Friend Street, za only, limit 3
+      {
+         "request": {
+            "method": "GET",
+            "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
+            "params": {
+               format: "json",
+               q: "Friend Street",
+               addressdetails: "1",
+               bounded: "1",
+               limit: "3",
+               viewbox: "viewbox=16.4500%2C-22.1278%2C32.8917%2C-34.8333"
+            }
+         },
+         "response": {
+            "code": 200,
+            "data": [
+               {
+                  "place_id": "41697576",
+                  "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http:\/\/www.openstreetmap.org\/copyright",
+                  "osm_type": "way",
+                  "osm_id": "6281420",
+                  "boundingbox": [
+                     "-33.9344496",
+                     "-33.9338317",
+                     "18.4566646",
+                     "18.4575346"
+                  ],
+                  "lat": "-33.9344496",
+                  "lon": "18.4575346",
+                  "display_name": "Friend Street, Cape Town Ward 57, Cape Town Subcouncil 15, Cape Town, City of Cape Town, Western Cape, 7925, RSA",
+                  "class": "highway",
+                  "type": "unclassified",
+                  "importance": 0.3,
+                  "address": {
+                     "road": "Friend Street",
+                     "suburb": "Cape Town Ward 57",
+                     "city_district": "Cape Town Subcouncil 15",
+                     "city": "Cape Town",
+                     "county": "City of Cape Town",
+                     "state": "Western Cape",
+                     "postcode": "7925",
+                     "country": "RSA",
+                     "country_code": "za"
+                  }
+               }
+            ]
+         }
+      },
+
+   // GET osmaps Friend Street, za preferred, limit 3
+      {
+         "request": {
+            "method": "GET",
+            "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
+            "params": {
+               format: "json",
+               q: "Friend Street",
+               addressdetails: "1",
+               bounded: "0",
+               limit: "3",
+               viewbox: "viewbox=16.4500%2C-22.1278%2C32.8917%2C-34.8333"
+            }
+         },
+         "response": {
+            "code": 200,
+            "data": [
+               {
+                  "place_id": "41697576",
+                  "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http:\/\/www.openstreetmap.org\/copyright",
+                  "osm_type": "way",
+                  "osm_id": "6281420",
+                  "boundingbox": [
+                     "-33.9344496",
+                     "-33.9338317",
+                     "18.4566646",
+                     "18.4575346"
+                  ],
+                  "lat": "-33.9344496",
+                  "lon": "18.4575346",
+                  "display_name": "Friend Street, Cape Town Ward 57, Cape Town Subcouncil 15, Cape Town, City of Cape Town, Western Cape, 7925, RSA",
+                  "class": "highway",
+                  "type": "unclassified",
+                  "importance": 0.3,
+                  "address": {
+                     "road": "Friend Street",
+                     "suburb": "Cape Town Ward 57",
+                     "city_district": "Cape Town Subcouncil 15",
+                     "city": "Cape Town",
+                     "county": "City of Cape Town",
+                     "state": "Western Cape",
+                     "postcode": "7925",
+                     "country": "RSA",
+                     "country_code": "za"
+                  }
+               },
+               {
+                  "place_id": "148585060",
+                  "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http:\/\/www.openstreetmap.org\/copyright",
+                  "osm_type": "way",
+                  "osm_id": "277202897",
+                  "boundingbox": [
+                     "42.8562649",
+                     "42.856395",
+                     "-70.9340489",
+                     "-70.9337327"
+                  ],
+                  "lat": "42.856319",
+                  "lon": "-70.9338925",
+                  "display_name": "Friend Street, Amesbury, Essex County, Massachusetts, 01913, United States of America",
+                  "class": "highway",
+                  "type": "tertiary",
+                  "importance": 0.25625,
+                  "address": {
+                     "road": "Friend Street",
+                     "town": "Amesbury",
+                     "county": "Essex County",
+                     "state": "Massachusetts",
+                     "postcode": "01913",
+                     "country": "United States of America",
+                     "country_code": "us"
+                  }
+               },
+               {
+                  "place_id": "52002761",
+                  "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http:\/\/www.openstreetmap.org\/copyright",
+                  "osm_type": "way",
+                  "osm_id": "18818106",
+                  "boundingbox": [
+                     "43.587128",
+                     "43.588894",
+                     "-71.2201729",
+                     "-71.2185079"
+                  ],
+                  "lat": "43.587787",
+                  "lon": "-71.2195199",
+                  "display_name": "Friend Street, Wolfeboro, Carroll County, New Hampshire, 03894, United States of America",
+                  "class": "highway",
+                  "type": "residential",
+                  "importance": 0.25625,
+                  "address": {
+                     "road": "Friend Street",
+                     "village": "Wolfeboro",
+                     "county": "Carroll County",
+                     "state": "New Hampshire",
+                     "postcode": "03894",
+                     "country": "United States of America",
+                     "country_code": "us"
+                  }
+               }
+            ]
+         }
+      },
+
+   // GET osmaps agx - no results
+      {
+         "request": {
+            "method": "GET",
+            "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
+            "params": {
+               format: "json",
+               q: "osmaps agx",
+               addressdetails: "1",
+               bounded: "0",
+               limit: "3",
+               viewbox: "viewbox=16.4500%2C-22.1278%2C32.8917%2C-34.8333"
+            }
+         },
+         "response": {
+            "code": 200,
+            "data": []
+         }
+      },
+
+   // GET osmaps agy - no results
+      {
+         "request": {
+            "method": "GET",
+            "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
+            "params": {
+               format: "json",
+               q: "osmaps agy",
+               addressdetails: "1",
+               bounded: "0",
+               limit: "3",
+               viewbox: "viewbox=16.4500%2C-22.1278%2C32.8917%2C-34.8333"
+            }
+         },
+         "response": {
+            "code": 200,
+            "data": []
+         }
+      },
+
+   ];
 };
