@@ -46,6 +46,8 @@ describe('states.location', function() {
                 });
         });
 
+      describe('GOOGLE MAPS API', function() {
+
         it('should request the user for a location with default message',
         function() {
             return tester
@@ -55,7 +57,6 @@ describe('states.location', function() {
                     reply:'What is your address?',
                 })
                 .run();
-
         });
 
         it('should request the user for a location with a custom message',
@@ -66,7 +67,7 @@ describe('states.location', function() {
                 .check.interaction({
                     state:'states:test',
                     reply:'Custom location question',
-                    })
+                })
                 .run();
         });
 
@@ -220,7 +221,7 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.extra['location:formatted_address'], 
+                    assert.equal(contact.extra['location:formatted_address'],
                         'Friend Street, Cape Town 7925, South Africa');
                 })
                 .run();
@@ -315,7 +316,7 @@ describe('states.location', function() {
             .check(function(api) {
                 var contact = api.contacts.store[0];
                 assert.equal(contact.extra[
-                    'location:geometry:bounds:northeast:lng'], 
+                    'location:geometry:bounds:northeast:lng'],
                     '18.4575469');
             })
             .run();
@@ -332,7 +333,7 @@ describe('states.location', function() {
                 .check(function(api) {
                     var contact = api.contacts.store[0];
                     assert.equal(contact.extra[
-                        'location:geometry:bounds:northeast:lat'], 
+                        'location:geometry:bounds:northeast:lat'],
                         '-33.9338399');
                     assert.equal(contact.extra[
                         'location:geometry:bounds:southwest:lng'], '18.45667');
@@ -348,12 +349,12 @@ describe('states.location', function() {
                 .run()
                 .catch(function(e) {
                     assert(e instanceof Error);
-                    assert.equal(e.message, ['Object not.a.real.object', 
+                    assert.equal(e.message, ['Object not.a.real.object',
                         'was not found in the API response'].join(' '));
                 });
         });
 
-        it('should translate the first question', 
+        it('should translate the first question',
         function(){
             tester.data.opts.question = test_utils.$('hello');
 
@@ -367,7 +368,7 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should translate the error question', 
+        it('should translate the error question',
         function(){
             tester.data.opts.error_question = test_utils.$('no!');
             return tester
@@ -380,7 +381,7 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should translate the refine question and page prompts', 
+        it('should translate the refine question and page prompts',
         function(){
             tester.data.opts.refine_question = test_utils.$('hello?');
             tester.data.opts.next_text = test_utils.$('yes');
@@ -456,11 +457,297 @@ describe('states.location', function() {
             .check(function(api) {
                 var contact = api.contacts.store[0];
                 assert.equal(contact.extra[
-                    'from_location:geometry:bounds:northeast:lng'], 
+                    'from_location:geometry:bounds:northeast:lng'],
                     '18.4575469');
             })
             .run();
         });
+
+      });
+
+      describe('OPENSTREETMAPS API', function() {
+        it('should request the user for a location with default message',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            return tester
+                .start()
+                .check.interaction({
+                    state:'states:test',
+                    reply:'What is your address?',
+                })
+                .run();
+        });
+
+        it('should request the user for a location with a custom message',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.question = 'Custom location question';
+            return tester
+                .start()
+                .check.interaction({
+                    state:'states:test',
+                    reply:'Custom location question',
+                })
+                .run();
+        });
+
+        it("should give a list of locations if more than one is available",
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Cape Town, 7925, RSA',
+                        '2. Friend Street, 01913, United States of America',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should give the error message if no results are found',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "osmaps agx"
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Error: No results for your search term.',
+                        'Please try another search term.'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should continuously give the error message if no results are found',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "osmaps agx",
+                    "osmaps agy"
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Error: No results for your search term.',
+                        'Please try another search term.'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should display the next page if next is selected',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n'
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        "Please select your location from the following:",
+                        "1. Friend Street, 03894, United States of America",
+                        "n. Next",
+                        "p. Previous"
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should go back to the first page if next then previous is selected',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n',
+                    'p'
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Cape Town, 7925, RSA',
+                        '2. Friend Street, 01913, United States of America',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should stay on the first page if there are no pages to go back to',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'p'
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Cape Town, 7925, RSA',
+                        '2. Friend Street, 01913, United States of America',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should stay on the last page if there are no more pages',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n',
+                    'n'
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        "Please select your location from the following:",
+                        "1. Friend Street, 03894, United States of America",
+                        "n. Next",
+                        "p. Previous"
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should go to the next state when location is selected from list',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    '1'
+                )
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:formatted_address'],
+                            'Friend Street, Cape Town, 7925, RSA');
+                })
+                .run();
+        });
+
+        it('should go to the next state when location is selected on any page',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n',
+                    '1'
+                )
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:formatted_address'],
+                            'Friend Street, 03894, United States of America');
+                })
+                .run();
+        });
+
+        it('should go to the next state if there is only one result',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs("Friend Street")
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:formatted_address'],
+                        'Friend Street, Cape Town, 7925, RSA');
+                })
+                .run();
+        });
+
+      });
 
     });
 });
