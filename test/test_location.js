@@ -521,31 +521,29 @@ describe('states.location', function() {
                 .run();
         });
 
-        // The test below is commented out due to the character limit check
-        // infinte loop problem (see location.js .. self.generate_pages)
-        // it("should default to displaying display_name if no address_details " +
-        // "are given", function() {
-        //     tester.data.opts.mapping_service = 'osmaps';
-        //     tester.data.opts.country_code = 'za';
-        //     tester.data.opts.address_limit = 3;
-        //     tester.data.opts.hard_boundary = false;
-        //     return tester
-        //         .inputs(
-        //             {session_event: 'new'},
-        //             "Friend Street"
-        //         )
-        //         .check.interaction({
-        //             state:'states:test',
-        //             reply:[
-        //                 'Please select your location from the following:',
-        //                 '1. Friend Street, Cape Town, 7925, RSA',
-        //                 '2. Friend Street, 01913, United States of America',
-        //                 'n. Next',
-        //                 'p. Previous'
-        //             ].join('\n')
-        //         })
-        //         .run();
-        // });
+        it("should default to displaying display_name if no address_details " +
+        "are given", function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Cape Town Ward 57, Cape Town ' +
+                        'Subcouncil 15, Cape Town, City of Cape Tow...',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
 
         it('should give the error message if no results are found',
         function() {
@@ -956,7 +954,10 @@ describe('states.location', function() {
             tester.data.opts.address_details = ['road', 'city',
                                                 'postcode', 'country'];
             return tester
-                .inputs("Friend Street")
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
                 .check.interaction({
                     state:'states:end'
                 })
@@ -976,7 +977,10 @@ describe('states.location', function() {
             tester.data.opts.address_details = ['road', 'city',
                                                 'postcode', 'country'];
             return tester
-                .inputs("Friend Street")
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
                 .check.interaction({
                     state:'states:end'
                 })
@@ -997,7 +1001,10 @@ describe('states.location', function() {
             tester.data.opts.address_details = ['road', 'city',
                                                 'postcode', 'country'];
             return tester
-                .inputs("Friend Street")
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
                 .check.interaction({
                     state:'states:end'
                 })
@@ -1020,7 +1027,10 @@ describe('states.location', function() {
             tester.data.opts.address_details = ['road', 'city',
                                                 'postcode', 'country'];
             return tester
-                .inputs("Friend Street")
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
                 .check.interaction({
                     state:'states:end'
                 })
@@ -1042,7 +1052,10 @@ describe('states.location', function() {
             tester.data.opts.address_details = ['road', 'city',
                                                 'postcode', 'country'];
             return tester
-                .inputs("Friend Street")
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
                 .check.interaction({
                     state:'states:end'
                 })
@@ -1054,45 +1067,55 @@ describe('states.location', function() {
                 .run();
         });
 
-        // it('should recognize user added addresses for fixtures',
-        // function() {
-        //     locations.add_location({
-        //         request:"New Street",
-        //         address_list:["New Street 1", "New Street 2"]
-        //     });
-        //     return tester
-        //         .input("New Street")
-        //         .check.reply([
-        //             'Please select your location from the following:',
-        //             '1. New Street 1',
-        //             '2. New Street 2',
-        //             'n. Next',
-        //             'p. Previous'
-        //             ].join('\n'))
-        //         .run();
-        // });
+        it('should recognize user added addresses for fixtures',
+        function() {
+            locations.add_location({
+                mapping_service:"osmaps",
+                request:"New Street",
+                address_list:["New Street 1", "New Street 2"]
+            });
+            tester.data.opts.mapping_service = 'osmaps';
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "New Street"
+                )
+                .check.interaction({
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. New Street 1',
+                        '2. New Street 2',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
 
-        // it('should recognize user added response objects for fixtures',
-        // function() {
-        //     locations.add_location({
-        //         request:"Another Street",
-        //         response_data: {
-        //             results: [{
-        //                 "formatted_address": "Another Street, Suburb",
-        //                 "types": ["route"]
-        //             }],
-        //             status:"OK"
-        //         }
-        //     });
-        //     tester.data.opts.store_fields = ['types'];
-        //     return tester
-        //         .input("Another Street")
-        //         .check(function(api) {
-        //             var contact = api.contacts.store[0];
-        //             assert.equal(contact.extra['location:types:0'], 'route');
-        //         })
-        //         .run();
-        // });
+        it('should recognize user added response objects for fixtures',
+        function() {
+            locations.add_location({
+                mapping_service:"osmaps",
+                request:"Another Street",
+                response_data: {
+                    "display_name": "Another Street, Suburb",
+                    "class": "highway"
+                }
+            });
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.store_fields = ['display_name', 'class'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Another Street"
+                )
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:class'], 'highway');
+                    assert.equal(contact.extra['location:display_name'], 'Another Street, Suburb');
+                })
+                .run();
+        });
 
       });
 
