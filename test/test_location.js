@@ -35,6 +35,12 @@ describe('states.location', function() {
                 });
             });
 
+            app.states.add('states:skip', function(name) {
+                return new EndState(name, {
+                    text: 'This is the skip state.'
+                });
+            });
+
             tester
                 .setup.config.app({
                     name: 'locationState-tester'
@@ -75,6 +81,77 @@ describe('states.location', function() {
         function() {
             return tester
                 .inputs("Friend Street")
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Amesbury, MA 01913, USA',
+                        '2. Friend Street, Adams, MA 01220, USA',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should show skip option if skip_state is defined',
+        function() {
+            tester.data.opts.skip = 'states:skip';
+            return tester
+                .inputs("Friend Street")
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Amesbury, MA 01913, USA',
+                        '2. Friend Street, Adams, MA 01220, USA',
+                        'n. Next',
+                        'p. Previous',
+                        's. Skip'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should show the skip option on all pages',
+        function() {
+            tester.data.opts.skip = 'states:skip';
+            return tester
+                .inputs("Friend Street", 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',
+                    'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n')
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        "Please select your location from the following:",
+                        "1. Friend Street, Kittery, ME 03904, USA",
+                        "n. Next",
+                        "p. Previous",
+                        "s. Skip"
+                        ].join('\n')
+                })
+                .run();
+        });
+
+        it('should go to skip_state is skip is selected',
+        function() {
+            tester.data.opts.skip = 'states:skip';
+            return tester
+                .inputs("Friend Street", 's')
+                .check.interaction({
+                    state:'states:skip'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:formatted_address'],
+                        undefined);
+                })
+                .run();
+        });
+
+        it("should not go to skip_state if 's' is selected without prompt",
+        function() {
+            return tester
+                .inputs("Friend Street", 's')
                 .check.interaction({
                     state:'states:test',
                     reply:[
@@ -508,6 +585,110 @@ describe('states.location', function() {
                     {session_event: 'new'},
                     "Friend Street"
                 )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Cape Town, 7925, RSA',
+                        '2. Friend Street, 01913, United States of America',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should show skip option if skip_state is defined',
+        function() {
+            tester.data.opts.skip = 'states:skip';
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street"
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Cape Town, 7925, RSA',
+                        'n. Next',
+                        'p. Previous',
+                        's. Skip'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should show the skip option on all pages',
+        function() {
+            tester.data.opts.skip = 'states:skip';
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n', 'n'
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, 03894, United States of America',
+                        'n. Next',
+                        'p. Previous',
+                        's. Skip'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should go to skip_state is skip is selected',
+        function() {
+            tester.data.opts.skip = 'states:skip';
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    's'
+                )
+                .check.interaction({
+                    state:'states:skip'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:display_name'],
+                        undefined);
+                })
+                .run();
+        });
+
+        it("should not go to skip_state if 's' is selected without prompt",
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs("Friend Street", 's')
                 .check.interaction({
                     state:'states:test',
                     reply:[
