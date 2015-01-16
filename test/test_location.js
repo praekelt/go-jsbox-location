@@ -124,7 +124,7 @@ describe('states.location', function() {
                     reply:[
                         "Please select your location from the following:",
                         "1. Friend Street, Kittery, ME 03904, USA",
-                        "n. Next",
+                        "r. Retry",
                         "p. Previous",
                         "s. Skip"
                         ].join('\n')
@@ -252,9 +252,38 @@ describe('states.location', function() {
                     reply:[
                         "Please select your location from the following:",
                         "1. Friend Street, Kittery, ME 03904, USA",
-                        "n. Next",
+                        "r. Retry",
                         "p. Previous"
                         ].join('\n')
+                })
+                .run();
+        });
+
+        it('should ask for address input again if retry is selected',
+        function() {
+            return tester
+                .inputs("Friend Street", 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',
+                    'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'r')
+                .check.interaction({
+                    state:'states:test',
+                    reply:'What is your address?',
+                })
+                .run();
+        });
+
+        it('should save location to contact if retry was hit during input',
+        function() {
+            return tester
+                .inputs("Friend Street", 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',
+                    'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',
+                    'r', 'Friend Street, South Africa')
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:formatted_address'],
+                        'Friend Street, Cape Town 7925, South Africa');
                 })
                 .run();
         });
@@ -491,7 +520,7 @@ describe('states.location', function() {
                     'Please select your location from the following:',
                     '1. New Street 1',
                     '2. New Street 2',
-                    'n. Next',
+                    'r. Retry',
                     'p. Previous'
                     ].join('\n'))
                 .run();
@@ -645,7 +674,7 @@ describe('states.location', function() {
                     reply:[
                         'Please select your location from the following:',
                         '1. Friend Street, 03894, United States of America',
-                        'n. Next',
+                        'r. Retry',
                         'p. Previous',
                         's. Skip'
                     ].join('\n')
@@ -718,7 +747,7 @@ describe('states.location', function() {
                     reply:[
                         'Please select your location from the following:',
                         '1. Friend Street, Cape Town Ward 57, Cape Town ' +
-                        'Subcouncil 15, Cape Town, City of Cape Tow...',
+                        'Subcouncil 15, Cape Town, City of Cape To...',
                         'n. Next',
                         'p. Previous'
                     ].join('\n')
@@ -792,7 +821,7 @@ describe('states.location', function() {
                     reply:[
                         "Please select your location from the following:",
                         "1. Friend Street, 03894, United States of America",
-                        "n. Next",
+                        "r. Retry",
                         "p. Previous"
                     ].join('\n')
                 })
@@ -874,9 +903,59 @@ describe('states.location', function() {
                     reply:[
                         "Please select your location from the following:",
                         "1. Friend Street, 03894, United States of America",
-                        "n. Next",
+                        "r. Retry",
                         "p. Previous"
                     ].join('\n')
+                })
+                .run();
+        });
+
+        it('should ask for address input again if retry is selected',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n',
+                    'r'
+                )
+                .check.interaction({
+                    state:'states:test',
+                    reply:'What is your address?',
+                })
+                .run();
+        });
+
+        it('should save location to contact if retry was hit during input',
+        function() {
+            tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.country_code = 'za';
+            tester.data.opts.address_limit = 3;
+            tester.data.opts.hard_boundary = false;
+            tester.data.opts.address_details = ['road', 'city',
+                                                'postcode', 'country'];
+            return tester
+                .inputs(
+                    {session_event: 'new'},
+                    "Friend Street",
+                    'n',
+                    'r',
+                    'Foe Street',
+                    '1'
+                )
+                .check.interaction({
+                    state:'states:end'
+                })
+                .check(function(api) {
+                    var contact = api.contacts.store[0];
+                    assert.equal(contact.extra['location:display_name'],
+                            'Foe Street, Cape Town, 7925, RSA');
                 })
                 .run();
         });
@@ -1118,7 +1197,6 @@ describe('states.location', function() {
                         'hallo?',
                         '1. Friend Street, Cape Town, 7925, RSA',
                         '2. Friend Street, 01913, United States of America',
-                        '3. Friend Street, 03894, United States of America',
                         'n. ja',
                         'p. nee'
                     ].join('\n')
@@ -1266,7 +1344,7 @@ describe('states.location', function() {
                         'Please select your location from the following:',
                         '1. New Street 1',
                         '2. New Street 2',
-                        'n. Next',
+                        'r. Retry',
                         'p. Previous'
                     ].join('\n')
                 })

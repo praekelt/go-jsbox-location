@@ -17,7 +17,7 @@ describe("app", function() {
             locations.add_location({
                 request:"Example Street",
                 response_data: {
-                    results: 
+                    results:
                     [{
                         formatted_address:"Example Street, Suburb",
                         geometry: {
@@ -26,7 +26,7 @@ describe("app", function() {
                                 longitude: '2.7182818284'
                             }
                         }
-                    }, 
+                    },
                     {
                         formatted_address:"Another Street, Suburb",
                         geometry: {
@@ -43,7 +43,7 @@ describe("app", function() {
             locations.add_location({
                 request:"Single Street",
                 response_data: {
-                    results: 
+                    results:
                     [{
                         formatted_address:"Single Street, Suburb",
                         geometry: {
@@ -93,7 +93,7 @@ describe("app", function() {
                             "Please select your location from the following:",
                             "1. Example Street, Suburb",
                             "2. Another Street, Suburb",
-                            "n. Next",
+                            "r. Retry",
                             "p. Prev"
                         ].join('\n')
                     })
