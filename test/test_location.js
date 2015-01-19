@@ -335,7 +335,9 @@ describe('states.location', function() {
 
         it('should store the requested custom fields when the result is chosen',
         function() {
-            tester.data.opts.store_fields=['types'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['types']
+            };
             return tester
             .inputs('Friend Street, South Africa')
             .check.interaction({
@@ -413,7 +415,9 @@ describe('states.location', function() {
 
         it('should understand nested parameters for field options',
         function() {
-            tester.data.opts.store_fields = ['geometry.bounds.northeast.lng'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['geometry.bounds.northeast.lng']
+            };
             return tester
             .inputs("Friend Street, South Africa")
             .check.interaction({
@@ -430,7 +434,9 @@ describe('states.location', function() {
 
         it('should unnest nested parameters if the given object is nested',
         function() {
-            tester.data.opts.store_fields = ['geometry.bounds'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['geometry.bounds']
+            };
             return tester
                 .inputs("Friend Street, South Africa")
                 .check.interaction({
@@ -449,7 +455,9 @@ describe('states.location', function() {
 
         it('should throw an error if an object does not exit',
         function() {
-            tester.data.opts.store_fields = ['not.a.real.object'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['not.a.real.object']
+            };
             return tester
                 .inputs("Friend Street")
                 .run()
@@ -492,6 +500,9 @@ describe('states.location', function() {
             tester.data.opts.refine_question = test_utils.$('hello?');
             tester.data.opts.next_text = test_utils.$('yes');
             tester.data.opts.previous_text = test_utils.$('no');
+            tester.data.opts.map_api_opts = {
+                store_fields: ['formatted_address']
+            };  // this declaration should be unnecessary but is somehow required
 
             return tester
                 .setup.config(config())
@@ -539,8 +550,9 @@ describe('states.location', function() {
                 }
             });
 
-            tester.data.opts.store_fields = ['types'];
-
+            tester.data.opts.map_api_opts = {
+                store_fields: ['types']
+            };
             return tester
                 .input("Another Street")
                 .check(function(api) {
@@ -553,8 +565,10 @@ describe('states.location', function() {
 
         it('should store the data in the user defined namespace',
         function() {
-            tester.data.opts.store_fields = ['geometry.bounds.northeast.lng'];
             tester.data.opts.namespace = 'from_location';
+            tester.data.opts.map_api_opts = {
+                store_fields: ['geometry.bounds.northeast.lng']
+            };
             return tester
             .inputs("Friend Street, South Africa")
             .check.interaction({
@@ -575,8 +589,10 @@ describe('states.location', function() {
         it('should request the user for a location with default message',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3
+            };
             return tester
                 .start()
                 .check.interaction({
@@ -589,9 +605,11 @@ describe('states.location', function() {
         it('should request the user for a location with a custom message',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
             tester.data.opts.question = 'Custom location question';
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3
+            };
             return tester
                 .start()
                 .check.interaction({
@@ -604,11 +622,12 @@ describe('states.location', function() {
         it("should give a list of locations if more than one is available",
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -631,11 +650,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.skip = 'states:skip';
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -658,11 +678,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.skip = 'states:skip';
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -686,11 +707,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.skip = 'states:skip';
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -711,11 +733,12 @@ describe('states.location', function() {
         it("should not go to skip_state if 's' is selected without prompt",
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs("Friend Street", 's')
                 .check.interaction({
@@ -734,9 +757,12 @@ describe('states.location', function() {
         it("should default to displaying display_name if no address_details " +
         "are given", function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: []
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -758,11 +784,12 @@ describe('states.location', function() {
         it('should give the error message if no results are found',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -781,11 +808,12 @@ describe('states.location', function() {
         it('should continuously give the error message if no results are found',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -805,11 +833,12 @@ describe('states.location', function() {
         it('should display the next page if next is selected',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -831,11 +860,12 @@ describe('states.location', function() {
         it('should go back to the first page if next then previous is selected',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -859,11 +889,12 @@ describe('states.location', function() {
         it('should stay on the first page if there are no pages to go back to',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -886,11 +917,12 @@ describe('states.location', function() {
         it('should stay on the last page if there are no more pages',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -913,11 +945,12 @@ describe('states.location', function() {
         it('should ask for address input again if retry is selected',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -935,11 +968,12 @@ describe('states.location', function() {
         it('should save location to contact if retry was hit during input',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -963,11 +997,12 @@ describe('states.location', function() {
         it('should go to the next state when location is selected from list',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -988,11 +1023,12 @@ describe('states.location', function() {
         it('should go to the next state when location is selected on any page',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1011,13 +1047,15 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should go to the next state if there is only one result',
+        it('should go to the next state if there is only 1 result',
         function() {
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                address_details: ['road', 'city', 'postcode', 'country'],
+                hard_boundary: true
+            };
             return tester
                 .inputs("Friend Street")
                 .check.interaction({
@@ -1038,11 +1076,12 @@ describe('states.location', function() {
             tester.data.opts.next_text = 'N';
             tester.data.opts.previous_text = 'P';
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1065,11 +1104,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.error_question = "Custom error question";
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1088,11 +1128,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.options_per_page = 1;
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1114,11 +1155,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.char_limit = 200;
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1134,11 +1176,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.question = test_utils.$('hello');
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .setup.config(config())
                 .setup.user.lang('af')
@@ -1154,11 +1197,12 @@ describe('states.location', function() {
         function() {
             tester.data.opts.error_question = test_utils.$('no!');
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .setup.config(config())
                 .setup.user.lang('af')
@@ -1179,11 +1223,12 @@ describe('states.location', function() {
             tester.data.opts.next_text = test_utils.$('yes');
             tester.data.opts.previous_text = test_utils.$('no');
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.hard_boundary = false;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                hard_boundary: false,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .setup.config(config())
                 .setup.user.lang('af')
@@ -1206,12 +1251,14 @@ describe('states.location', function() {
 
         it('should go to the next state if there is only one result',
         function() {
-            tester.data.opts.store_fields=['class'];
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['class'],
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                address_details: ['road', 'city', 'postcode', 'country'],
+                hard_boundary: true
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1229,12 +1276,13 @@ describe('states.location', function() {
 
         it('should understand nested parameters for field options',
         function() {
-            tester.data.opts.store_fields=['address.country_code'];
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['address.country_code'],
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1253,12 +1301,13 @@ describe('states.location', function() {
 
         it('should unnest nested parameters if the given object is nested',
         function() {
-            tester.data.opts.store_fields=['address'];
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['address'],
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1279,12 +1328,13 @@ describe('states.location', function() {
 
         it('should throw an error if an object does not exit',
         function() {
-            tester.data.opts.store_fields=['not.a.real.object'];
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['not.a.real.object'],
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1303,13 +1353,14 @@ describe('states.location', function() {
 
         it('should store the data in the user defined namespace',
         function() {
-            tester.data.opts.store_fields=['address.country_code'];
             tester.data.opts.namespace='from_location';
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.country_code = 'za';
-            tester.data.opts.address_limit = 3;
-            tester.data.opts.address_details = ['road', 'city',
-                                                'postcode', 'country'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['address.country_code'],
+                bounding_box: ["16.4500", "-22.1278", "32.8917", "-34.8333"],
+                address_limit: 3,
+                address_details: ['road', 'city', 'postcode', 'country']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1334,6 +1385,13 @@ describe('states.location', function() {
                 address_list:["New Street 1", "New Street 2"]
             });
             tester.data.opts.mapping_service = 'osmaps';
+            tester.data.opts.map_api_opts = {
+                store_fields: ['display_name'],
+                bounding_box: ["-180.0", "90.0", "180.0", "-90.0"],
+                address_limit: 30,
+                hard_boundary: true,
+                address_details: []
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
@@ -1362,7 +1420,16 @@ describe('states.location', function() {
                 }
             });
             tester.data.opts.mapping_service = 'osmaps';
-            tester.data.opts.store_fields = ['display_name', 'class'];
+            tester.data.opts.map_api_opts = {
+                store_fields: ['display_name', 'class'],
+                bounding_box: ["-180.0", "90.0", "180.0", "-90.0"],
+                address_limit: 30,
+                hard_boundary: true,
+                address_details: []
+            };
+            tester.data.opts.map_api_opts = {
+                store_fields: ['display_name', 'class']
+            };
             return tester
                 .inputs(
                     {session_event: 'new'},
