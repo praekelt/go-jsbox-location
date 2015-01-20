@@ -502,7 +502,8 @@ describe('states.location', function() {
             tester.data.opts.previous_text = test_utils.$('no');
             tester.data.opts.map_api_opts = {
                 store_fields: ['formatted_address']
-            };  // this declaration should be unnecessary but is somehow required
+            };  // this declaration should be unnecessary but is required when
+                // testing multiple tests and not with it.only
 
             return tester
                 .setup.config(config())
@@ -1438,7 +1439,8 @@ describe('states.location', function() {
                 .check(function(api) {
                     var contact = api.contacts.store[0];
                     assert.equal(contact.extra['location:class'], 'highway');
-                    assert.equal(contact.extra['location:display_name'], 'Another Street, Suburb');
+                    assert.equal(contact.extra['location:display_name'],
+                        'Another Street, Suburb');
                 })
                 .run();
         });
