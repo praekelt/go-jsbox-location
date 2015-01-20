@@ -4,7 +4,7 @@ var LocationApp = require('../lib/app').LocationApp;
 var LocationState = require('../../lib');
 
 describe("app", function() {
-    describe("LocationApp", function() {
+    describe("LocationApp_GMaps", function() {
         var app;
         var tester;
         var locations;

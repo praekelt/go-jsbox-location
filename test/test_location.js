@@ -1415,10 +1415,10 @@ describe('states.location', function() {
             locations.add_location({
                 mapping_service:"osmaps",
                 request:"Another Street",
-                response_data: {
+                response_data: [{
                     "display_name": "Another Street, Suburb",
                     "class": "highway"
-                }
+                }]
             });
             tester.data.opts.mapping_service = 'osmaps';
             tester.data.opts.map_api_opts = {
