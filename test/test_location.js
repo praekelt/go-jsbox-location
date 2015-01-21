@@ -3,7 +3,9 @@ var fixtures = require('./fixtures');
 var App = vumigo.App;
 var AppTester = vumigo.AppTester;
 var EndState = vumigo.states.EndState;
-var LocationState = require('../lib');
+var location = require('../lib');
+var LocationState = location.LocationState;
+var GoogleMaps = location.GoogleMaps;
 var assert = require('assert');
 var _ = require('lodash');
 var test_utils = vumigo.test_utils;
@@ -226,9 +228,11 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should store the requested custom fields when the result is chosen',
+        it('should store the requested custom address data when the result is chosen',
         function() {
-            tester.data.opts.store_fields=['types'];
+            tester.data.opts.map_provider = new GoogleMaps({
+                extract_address_data: _.partialRight(_.pick, 'types'),
+            });
             return tester
             .inputs('Friend Street, South Africa')
             .check.interaction({
@@ -304,9 +308,14 @@ describe('states.location', function() {
             .run();
         });
 
-        it('should understand nested parameters for field options',
+        it('should understand nested parameters for address data',
         function() {
-            tester.data.opts.store_fields = ['geometry.bounds.northeast.lng'];
+            tester.data.opts.map_provider = new GoogleMaps({
+                extract_address_data: function(result) {
+                    return {'geometry.bounds.northeast.lng':
+                            result.geometry.bounds.northeast.lng};
+                }
+            });
             return tester
             .inputs("Friend Street, South Africa")
             .check.interaction({
@@ -315,7 +324,7 @@ describe('states.location', function() {
             .check(function(api) {
                 var contact = api.contacts.store[0];
                 assert.equal(contact.extra[
-                    'location:geometry:bounds:northeast:lng'], 
+                    'location:geometry:bounds:northeast:lng'],
                     '18.4575469');
             })
             .run();
@@ -323,7 +332,12 @@ describe('states.location', function() {
 
         it('should unnest nested parameters if the given object is nested',
         function() {
-            tester.data.opts.store_fields = ['geometry.bounds'];
+            tester.data.opts.map_provider = new GoogleMaps({
+                extract_address_data: function(result) {
+                    return {'geometry.bounds':
+                            result.geometry.bounds};
+                }
+            });
             return tester
                 .inputs("Friend Street, South Africa")
                 .check.interaction({
@@ -332,7 +346,7 @@ describe('states.location', function() {
                 .check(function(api) {
                     var contact = api.contacts.store[0];
                     assert.equal(contact.extra[
-                        'location:geometry:bounds:northeast:lat'], 
+                        'location:geometry:bounds:northeast:lat'],
                         '-33.9338399');
                     assert.equal(contact.extra[
                         'location:geometry:bounds:southwest:lng'], '18.45667');
@@ -432,7 +446,9 @@ describe('states.location', function() {
                 }
             });
 
-            tester.data.opts.store_fields = ['types'];
+            tester.data.opts.map_provider = new GoogleMaps({
+                extract_address_data: _.partialRight(_.pick, 'types'),
+            });
 
             return tester
                 .input("Another Street")
@@ -446,7 +462,6 @@ describe('states.location', function() {
 
         it('should store the data in the user defined namespace',
         function() {
-            tester.data.opts.store_fields = ['geometry.bounds.northeast.lng'];
             tester.data.opts.namespace = 'from_location';
             return tester
             .inputs("Friend Street, South Africa")
@@ -456,8 +471,8 @@ describe('states.location', function() {
             .check(function(api) {
                 var contact = api.contacts.store[0];
                 assert.equal(contact.extra[
-                    'from_location:geometry:bounds:northeast:lng'], 
-                    '18.4575469');
+                    'from_location:formatted_address'],
+                    'Friend Street, Cape Town 7925, South Africa');
             })
             .run();
         });

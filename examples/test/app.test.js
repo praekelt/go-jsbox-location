@@ -1,7 +1,8 @@
 var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
 var LocationApp = require('../lib/app').LocationApp;
-var LocationState = require('../../lib');
+var location = require('../../lib');
+var LocationState = location.LocationState;
 
 describe("app", function() {
     describe("LocationApp", function() {

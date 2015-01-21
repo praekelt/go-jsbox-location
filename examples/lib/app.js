@@ -1,5 +1,7 @@
 var vumigo = require('vumigo_v02');
-var LocationState = require('../../lib');
+var location = require('../../lib');
+var LocationState = location.LocationState;
+var GoogleMaps = location.GoogleMaps;
 
 var App = vumigo.App;
 var EndState = vumigo.states.EndState;
@@ -16,7 +18,14 @@ var LocationApp = App.extend(function(self){
                 "What is your current address?"].join("\n"),
             next: "states:end",
             previous_text: "Prev",
-            store_fields: ["geometry.location", "formatted_address"]
+            map_provider: new GoogleMaps({
+                extract_address_data: function(result) {
+                    return {
+                        "geometry.location": result.geometry.location,
+                        "formatted_address": result.formatted_address,
+                    };
+                },
+            }),
         });
     });
 
