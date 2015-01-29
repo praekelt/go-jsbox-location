@@ -2,10 +2,13 @@ var assert = require('assert');
 
 var vumigo = require('vumigo_v02');
 var BaseError = vumigo.utils.BaseError;
+var Extendable = vumigo.utils.Extendable;
+var test_utils = vumigo.test_utils;
 
 var provider = require('../../lib/providers/provider');
 var ProviderNotImplementedError = provider.ProviderNotImplementedError;
 var AddressResult = provider.AddressResult;
+var Provider = provider.Provider;
 
 describe('ProviderNotImplementedError', function() {
     it('should extend BaseError', function() {
@@ -33,5 +36,37 @@ describe('AddressResult', function() {
     it('should contain data', function() {
         var addr = new AddressResult('label', {'custom': 'data'});
         assert.deepEqual(addr.data, {'custom': 'data'});
+    });
+});
+
+describe('Provider', function() {
+    it('should be extendable', function() {
+        var p = new Provider();
+        assert(p instanceof Extendable);
+    });
+
+    describe('.init()', function() {
+        it('should have a default implementation', function() {
+            var p = new Provider();
+            var dummy_im = {};
+            p.init(dummy_im);
+        });
+    });
+
+    describe('.search()', function() {
+        it('should raise ProviderNotImplementedError', function() {
+            var p = new Provider();
+            assert.throws(function () {
+                p.search("corner of smith and long");
+            }, ProviderNotImplementedError);
+        });
+
+        it('should provide a suitable error message', function() {
+            var p = new Provider();
+            var e = test_utils.catch_err(function() {
+                p.search('the middle of');
+            });
+            assert.strictEqual(e.message, '.search not implemented');
+        });
     });
 });
