@@ -42,7 +42,7 @@ describe('states.location', function() {
                     name: 'locationState-tester'
                 })
                 .setup(function(api) {
-                    fixtures().forEach(api.http.fixtures.add);
+                    fixtures.googlemaps().forEach(api.http.fixtures.add);
                     locations.fixtures.forEach(
                         api.http.fixtures.add);
                 });

@@ -39,6 +39,20 @@ module.exports = function() {
             "method": "GET",
             "url": "http://maps.googleapis.com/maps/api/geocode/json",
             "params": {
+                address:'no_data'
+            }
+        },
+        "response": {
+            "code": 200,
+            // data attribute is missing
+        }
+    },
+
+    {
+        "request": {
+            "method": "GET",
+            "url": "http://maps.googleapis.com/maps/api/geocode/json",
+            "params": {
                 address:'Friend Street'
             }
         },
@@ -2111,7 +2125,28 @@ module.exports = function() {
             "status" : "OK"
          }
         }
-    }
+    },
+
+    {
+        "request": {
+            "method": "GET",
+            "url": "http://maps.example.com/maps/api/geocode/json",
+            "params": {
+                address:'Moon'
+            }
+        },
+        "response": {
+            "code": 200,
+            "data": {
+                "results" : [
+                  {
+                     "formatted_address" : "Lake Serenity, The Moon",
+                  },
+                ],
+                "status": "OK"
+            },
+        },
+    },
 
     ];
 };
