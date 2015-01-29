@@ -1,5 +1,8 @@
 var assert = require('assert');
 
+var vumigo = require('vumigo_v02');
+var JsonApi = vumigo.http.api.JsonApi;
+
 var providers = require('../../lib/providers');
 var Provider = providers.Provider;
 var AddressResult = providers.AddressResult;
@@ -9,6 +12,16 @@ describe('OpenStreetMap', function() {
     it('should extend Provider', function() {
         var osm = new OpenStreetMap();
         assert(osm instanceof Provider);
+    });
+
+    describe('.init()', function() {
+        it('should create a JsonApi', function() {
+            var osm = new OpenStreetMap();
+            var dummy_im = {};
+            assert.strictEqual(osm.http, null);
+            osm.init(dummy_im);
+            assert(osm.http instanceof JsonApi);
+        });
     });
 
     describe('extract_address_label', function() {
