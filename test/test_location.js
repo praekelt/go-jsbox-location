@@ -308,7 +308,7 @@ describe('states.location', function() {
             .run();
         });
 
-        it('should understand nested parameters for address data',
+        it('should convert dots to colons in nested address data',
         function() {
             tester.data.opts.map_provider = new GoogleMaps({
                 extract_address_data: function(result) {
