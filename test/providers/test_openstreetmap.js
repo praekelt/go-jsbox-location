@@ -1,12 +1,19 @@
 var assert = require('assert');
 
+var fixtures = require('../fixtures');
+
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
+var test_utils = vumigo.test_utils;
 
 var providers = require('../../lib/providers');
 var Provider = providers.Provider;
 var AddressResult = providers.AddressResult;
 var OpenStreetMap = providers.OpenStreetMap;
+
+var loc_test_utils = require('../../lib/test_utils');
+var assert_address_result = loc_test_utils.assert_address_result;
+
 
 describe('OpenStreetMap', function() {
     it('should extend Provider', function() {
@@ -109,6 +116,75 @@ describe('OpenStreetMap', function() {
                     snowflake: 'unique',
                 });
                 assert.deepEqual(addr.data, {custom: 'unique'});
+            });
+        });
+    });
+
+    describe('.search()', function() {
+        var im;
+
+        beforeEach(function() {
+            return test_utils.make_im()
+                .then(function(dummy_im) {
+                    im = dummy_im;
+                    fixtures.openstreetmap().forEach(im.api.http.fixtures.add);
+                });
+        });
+
+        it('should return a promise with a list of AddressResults', function() {
+            var osm = new OpenStreetMap();
+            osm.init(im);
+            return osm.search('Foe Street')
+                .then(function(results) {
+                    assert_address_result(
+                        results[0], [
+                            'Foe Street, Cape Town Ward 57, Cape Town ',
+                            'Subcouncil 15, Cape Town, City of Cape Town, ',
+                            'Western Cape, 7925, RSA'
+                        ].join(''));
+                    assert_address_result(
+                        results[1], [
+                            'Foe Street, Amesbury, Essex County, ',
+                            'Massachusetts, 01913, United States of America',
+                        ].join(''));
+                    assert_address_result(
+                        results[2], [
+                            'Foe Street, Wolfeboro, Carroll County, ',
+                            'New Hampshire, 03894, United States of America',
+                        ].join(''));
+                    assert.strictEqual(results.length, 3);
+                });
+        });
+
+        it('should use the custom api_url if one is given', function() {
+            var osm = new OpenStreetMap({
+                api_url: 'http://example.com/nominatim/v1/search.php',
+            });
+            osm.init(im);
+            return osm.search('Moon')
+                .then(function(results) {
+                    assert_address_result(results[0], "Lake Serenity, The Moon");
+                    assert.strictEqual(results.length, 1);
+                });
+        });
+
+        describe('should return a promise with an empty list if', function() {
+            it('the response has no data', function() {
+                var osm = new OpenStreetMap();
+                osm.init(im);
+                return osm.search("no_data")
+                    .then(function(results) {
+                        assert.deepEqual(results, []);
+                    });
+            });
+
+            it('the response data is empty', function() {
+                var osm = new OpenStreetMap();
+                osm.init(im);
+                return osm.search("empty_data")
+                    .then(function(results) {
+                        assert.deepEqual(results, []);
+                    });
             });
         });
     });
