@@ -1,4 +1,5 @@
 var assert = require('assert');
+var _ = require('lodash');
 
 var fixtures = require('../fixtures');
 
@@ -116,6 +117,92 @@ describe('OpenStreetMap', function() {
                     snowflake: 'unique',
                 });
                 assert.deepEqual(addr.data, {custom: 'unique'});
+            });
+        });
+    });
+
+    describe('.api_params()', function() {
+        var default_query = 'generic query';
+
+        function api_params(opts, query) {
+            var osm = new OpenStreetMap(opts);
+            return osm.api_params(query || default_query);
+        }
+
+        function assert_params(params, expected) {
+            expected = _.defaults(expected, {
+                format: 'json',
+                q: default_query,
+                addressdetails: 1,
+                bounded: 1,
+                limit: 30,
+                viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0",
+            });
+            assert.deepEqual(params, expected);
+        }
+
+        it('should set the query text', function() {
+            var params = api_params(null, 'my search');
+            assert_params(params, {
+                q: 'my search',
+            });
+        });
+
+        it('should set the format to json', function() {
+            var params = api_params();
+            assert_params(params, {
+                format: 'json',
+            });
+        });
+
+        it('should request address details', function() {
+            var params = api_params();
+            assert_params(params, {
+                addressdetails: 1,
+            });
+        });
+
+        it('should set the default address limit', function() {
+            var params = api_params();
+            assert_params(params, {
+                limit: 30,
+            });
+        });
+
+        it('should set a custom address limit', function() {
+            var params = api_params({address_limit: 5});
+            assert_params(params, {
+                limit: 5,
+            });
+        });
+
+        it('should set the default boundedness', function() {
+            var params = api_params();
+            assert_params(params, {
+                bounded: 1,
+            });
+        });
+
+        it('should set a custom boundedness', function() {
+            var params = api_params({hard_boundary: 1});
+            assert_params(params, {
+                bounded: 0,
+            });
+        });
+
+        it('should set the default viewbox', function() {
+            var params = api_params();
+            assert_params(params, {
+                viewbox: 'viewbox=-180.0%2C90.0%2C180.0%2C-90.0',
+            });
+        });
+
+        it('should set a custom viewbox', function() {
+            var params = api_params({
+                bounding_box: ["-20.0", "75.0", "65.0", "-50.0"]
+            });
+            assert_params(params, {
+                viewbox: 'viewbox=-20.0%2C75.0%2C65.0%2C-50.0',
             });
         });
     });
