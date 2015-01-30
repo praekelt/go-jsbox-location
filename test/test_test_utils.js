@@ -8,7 +8,7 @@ var providers = require("../lib/providers");
 var AddressResult = providers.AddressResult;
 
 
-describe.only("assert_address_result", function() {
+describe("assert_address_result", function() {
     describe("should check the label", function() {
         it("and pass if it matches", function() {
             assert_address_result(
