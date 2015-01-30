@@ -222,7 +222,7 @@ describe('states.location', function() {
                 })
                 .check(function(api) {
                     var contact = api.contacts.store[0];
-                    assert.equal(contact.extra['location:formatted_address'], 
+                    assert.equal(contact.extra['location:formatted_address'],
                         'Friend Street, Cape Town 7925, South Africa');
                 })
                 .run();
@@ -354,20 +354,7 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should throw an error if an object does not exit',
-        function() {
-            tester.data.opts.store_fields = ['not.a.real.object'];
-            return tester
-                .inputs("Friend Street")
-                .run()
-                .catch(function(e) {
-                    assert(e instanceof Error);
-                    assert.equal(e.message, ['Object not.a.real.object', 
-                        'was not found in the API response'].join(' '));
-                });
-        });
-
-        it('should translate the first question', 
+        it('should translate the first question',
         function(){
             tester.data.opts.question = test_utils.$('hello');
 
@@ -381,7 +368,7 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should translate the error question', 
+        it('should translate the error question',
         function(){
             tester.data.opts.error_question = test_utils.$('no!');
             return tester
@@ -394,7 +381,7 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should translate the refine question and page prompts', 
+        it('should translate the refine question and page prompts',
         function(){
             tester.data.opts.refine_question = test_utils.$('hello?');
             tester.data.opts.next_text = test_utils.$('yes');
