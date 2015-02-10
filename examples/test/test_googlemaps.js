@@ -1,6 +1,6 @@
 var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
-var LocationApp = require('../lib/app').LocationApp;
+var LocationApp = require('../lib/googlemaps').LocationApp;
 var location = require('../../lib');
 var GoogleMaps = location.GoogleMaps;
 

@@ -10,11 +10,11 @@ var LocationApp = App.extend(function(self){
     App.call(self, 'states:start');
 
     self.states.add('states:start', function(name){
-        // This state will get the location data from the user and store it in 
-        // the contact store. We will store and return the longitude and 
+        // This state will get the location data from the user and store it in
+        // the contact store. We will store and return the longitude and
         // latitude information to the user.
         return new LocationState(name, {
-            question: ["Welcome to the location app.", 
+            question: ["Welcome to the location app.",
                 "What is your current address?"].join("\n"),
             next: "states:end",
             previous_text: "Prev",
