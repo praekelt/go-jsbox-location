@@ -328,7 +328,7 @@ describe('OpenStreetMap.fixture', function() {
            query: "Where am I?",
            hard_boundary: false,
        });
-       assert.strictEqual(fixture.request.params.bounded, 0);
+       assert.strictEqual(fixture.request.params.bounded, "0");
     });
 
     it('should allow setting the address limit', function() {
@@ -336,7 +336,7 @@ describe('OpenStreetMap.fixture', function() {
            query: "Where am I?",
            address_limit: 5,
        });
-       assert.strictEqual(fixture.request.params.limit, 5);
+       assert.strictEqual(fixture.request.params.limit, "5");
     });
 
     it('should allow setting the bounding box', function() {
