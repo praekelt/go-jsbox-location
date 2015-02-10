@@ -181,7 +181,7 @@ describe('GoogleMaps', function() {
     });
 });
 
-describe.only('GoogleMaps.fixture', function() {
+describe('GoogleMaps.fixture', function() {
     it('should return a fixture', function() {
         assert.deepEqual(
             GoogleMaps.fixture({
