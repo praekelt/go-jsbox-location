@@ -2,6 +2,7 @@ var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
 var LocationApp = require('../lib/app').LocationApp;
 var location = require('../../lib');
+var GoogleMaps = location.GoogleMaps;
 
 describe("app", function() {
     describe("LocationApp", function() {
@@ -12,12 +13,12 @@ describe("app", function() {
         beforeEach(function(){
             app = new LocationApp();
             tester = new AppTester(app);
-            locations = location.testing();
+            locations = [];
 
-            locations.add_location({
+            locations.push({
                 request:"Example Street",
                 response_data: {
-                    results: 
+                    results:
                     [{
                         formatted_address:"Example Street, Suburb",
                         geometry: {
@@ -26,7 +27,7 @@ describe("app", function() {
                                 longitude: '2.7182818284'
                             }
                         }
-                    }, 
+                    },
                     {
                         formatted_address:"Another Street, Suburb",
                         geometry: {
@@ -40,10 +41,10 @@ describe("app", function() {
                 }
             });
 
-            locations.add_location({
+            locations.push({
                 request:"Single Street",
                 response_data: {
-                    results: 
+                    results:
                     [{
                         formatted_address:"Single Street, Suburb",
                         geometry: {
@@ -62,8 +63,9 @@ describe("app", function() {
                     name: 'test_app'
                 })
                 .setup(function(api) {
-                    // Add all of the fixtures
-                    locations.fixtures.forEach(api.http.fixtures.add);
+                    locations.forEach(function(location) {
+                        api.http.fixtures.add(GoogleMaps.fixture(location));
+                    });
                 });
         });
 

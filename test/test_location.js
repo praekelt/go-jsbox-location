@@ -24,7 +24,7 @@ describe('states.location', function() {
 
             tester.data.opts = {};
 
-            locations = location.testing();
+            locations = [];
 
             app.states.add('states:test', function(name) {
                 _.defaults(tester.data.opts, {next:'states:end'});
@@ -43,8 +43,9 @@ describe('states.location', function() {
                 })
                 .setup(function(api) {
                     fixtures.googlemaps().forEach(api.http.fixtures.add);
-                    locations.fixtures.forEach(
-                        api.http.fixtures.add);
+                    locations.forEach(function(location) {
+                        api.http.fixtures.add(GoogleMaps.fixture(location));
+                    });
                 });
         });
 
@@ -404,7 +405,7 @@ describe('states.location', function() {
 
         it('should recognize user added addresses for fixtures',
         function() {
-            locations.add_location({
+            locations.push({
                 request:"New Street",
                 address_list:["New Street 1", "New Street 2"]
             });
@@ -422,7 +423,7 @@ describe('states.location', function() {
 
         it('should recognize user added response objects for fixtures',
         function() {
-            locations.add_location({
+            locations.push({
                 request:"Another Street",
                 response_data: {
                     results: [{
