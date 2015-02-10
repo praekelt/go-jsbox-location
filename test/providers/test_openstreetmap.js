@@ -323,6 +323,33 @@ describe('OpenStreetMap.fixture', function() {
         );
     });
 
+    it('should allow setting the hard boundary', function() {
+       var fixture = OpenStreetMap.fixture({
+           query: "Where am I?",
+           hard_boundary: false,
+       });
+       assert.strictEqual(fixture.request.params.bounded, 0);
+    });
+
+    it('should allow setting the address limit', function() {
+       var fixture = OpenStreetMap.fixture({
+           query: "Where am I?",
+           address_limit: 5,
+       });
+       assert.strictEqual(fixture.request.params.limit, 5);
+    });
+
+    it('should allow setting the bounding box', function() {
+       var fixture = OpenStreetMap.fixture({
+           query: "Where am I?",
+           bounding_box: ["1.0", "2.0", "3.0", "4.0"],
+       });
+       assert.strictEqual(
+           fixture.request.params.viewbox,
+           "viewbox=1.0%2C2.0%2C3.0%2C4.0"
+       );
+    });
+
     it('should allow overriding the request url', function() {
        var fixture = OpenStreetMap.fixture({
            query: "Where am I?",
