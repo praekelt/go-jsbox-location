@@ -20,7 +20,7 @@ describe("app", function() {
                 response_data: {
                     results:
                     [{
-                        formatted_address:"Example Street, Suburb",
+                        formatted_address: "Example Street, Suburb",
                         geometry: {
                             location:{
                                 latitude: '3.1415926535',
@@ -29,7 +29,7 @@ describe("app", function() {
                         }
                     },
                     {
-                        formatted_address:"Another Street, Suburb",
+                        formatted_address: "Another Street, Suburb",
                         geometry: {
                             location: {
                                 latitude: '2.7182818284',
@@ -46,7 +46,7 @@ describe("app", function() {
                 response_data: {
                     results:
                     [{
-                        formatted_address:"Single Street, Suburb",
+                        formatted_address: "Single Street, Suburb",
                         geometry: {
                             location:{
                                 latitude: '1.4142135623',
