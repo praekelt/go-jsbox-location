@@ -181,7 +181,7 @@ describe('GoogleMaps', function() {
     });
 });
 
-describe('GoogleMaps.fixture', function() {
+describe.only('GoogleMaps.fixture', function() {
     it('should return a fixture', function() {
         assert.deepEqual(
             GoogleMaps.fixture({
@@ -210,8 +210,42 @@ describe('GoogleMaps.fixture', function() {
         );
     });
 
-    //it('should allow overriding the request_url', function() {
-    //    var fixture = GoogleMaps.fixture({
-    //    });
-    //});
+    it('should require a query parameter', function() {
+        assert.throws(
+            function() {
+                GoogleMaps.fixture({
+                    address_list: ["2B"],
+                });
+            },
+            providers.FixtureParameterMissingError
+        );
+    });
+
+    it('should allow overriding the request url', function() {
+       var fixture = GoogleMaps.fixture({
+           query: "Where am I?",
+           request_url: "http://www.example.com",
+       });
+       assert.strictEqual(fixture.request.url, "http://www.example.com");
+    });
+
+    it('should default to an empty address list', function() {
+       var fixture = GoogleMaps.fixture({
+           query: "Place with no places",
+       });
+       assert.deepEqual(fixture.response.data.results, []);
+    });
+
+    it('should allow overriding the response data', function() {
+        var fixture = GoogleMaps.fixture({
+            query: "Can has custom data?",
+            address_list: ["Ignored place"],
+            response_data: {
+                this_is_the_data: "you are looking for",
+            },
+        });
+        assert.deepEqual(fixture.response.data, {
+            this_is_the_data: "you are looking for",
+        });
+    });
 });
