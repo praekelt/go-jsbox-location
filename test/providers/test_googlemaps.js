@@ -248,4 +248,33 @@ describe('GoogleMaps.fixture', function() {
             this_is_the_data: "you are looking for",
         });
     });
+
+    describe('when used with the GoogleMaps provider', function() {
+        var im, gm;
+
+        beforeEach(function() {
+            gm = new GoogleMaps();
+            return test_utils
+                .make_im()
+                .then(function(dummy_im) {
+                    im = dummy_im;
+                    return gm.init(im);
+                });
+        });
+
+        it('should provide fixtures for searches', function() {
+            var fixture = GoogleMaps.fixture({
+                query: "Baker Street",
+                address_list: ["2B", "Not 2B"],
+            });
+            im.api.http.fixtures.add(fixture);
+            return gm
+                .search("Baker Street")
+                .then(function(results) {
+                    assert_address_result(results[0], "2B");
+                    assert_address_result(results[1], "Not 2B");
+                    assert.strictEqual(results.length, 2);
+                });
+        });
+    });
 });
