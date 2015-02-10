@@ -277,7 +277,7 @@ describe('OpenStreetMap', function() {
     });
 });
 
-describe.only('OpenStreetMap.fixture', function() {
+describe('OpenStreetMap.fixture', function() {
     it('should return a fixture', function() {
         assert.deepEqual(
             OpenStreetMap.fixture({
