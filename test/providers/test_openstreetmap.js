@@ -136,7 +136,7 @@ describe('OpenStreetMap', function() {
                 addressdetails: 1,
                 bounded: 1,
                 limit: 30,
-                viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0",
+                viewbox: "-180.0,90.0,180.0,-90.0",
             });
             assert.deepEqual(params, expected);
         }
@@ -193,7 +193,7 @@ describe('OpenStreetMap', function() {
         it('should set the default viewbox', function() {
             var params = api_params();
             assert_params(params, {
-                viewbox: 'viewbox=-180.0%2C90.0%2C180.0%2C-90.0',
+                viewbox: '-180.0,90.0,180.0,-90.0',
             });
         });
 
@@ -202,7 +202,7 @@ describe('OpenStreetMap', function() {
                 bounding_box: ["-20.0", "75.0", "65.0", "-50.0"]
             });
             assert_params(params, {
-                viewbox: 'viewbox=-20.0%2C75.0%2C65.0%2C-50.0',
+                viewbox: '-20.0,75.0,65.0,-50.0',
             });
         });
     });
@@ -294,7 +294,7 @@ describe('OpenStreetMap.fixture', function() {
                        addressdetails: "1",
                        bounded: "1",
                        limit: "30",
-                       viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0"
+                       viewbox: "-180.0,90.0,180.0,-90.0"
                    },
                },
                response: {
@@ -346,7 +346,7 @@ describe('OpenStreetMap.fixture', function() {
        });
        assert.strictEqual(
            fixture.request.params.viewbox,
-           "viewbox=1.0%2C2.0%2C3.0%2C4.0"
+           "1.0,2.0,3.0,4.0"
        );
     });
 

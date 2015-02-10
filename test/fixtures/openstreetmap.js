@@ -12,7 +12,7 @@ module.exports = function() {
                addressdetails: "1",
                bounded: "1",
                limit: "30",
-               viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0"
+               viewbox: "-180.0,90.0,180.0,-90.0"
             }
         },
         "response": {
@@ -116,7 +116,7 @@ module.exports = function() {
                addressdetails: "1",
                bounded: "1",
                limit: "30",
-               viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0"
+               viewbox: "-180.0,90.0,180.0,-90.0"
             }
         },
         "response": {
@@ -135,7 +135,7 @@ module.exports = function() {
                addressdetails: "1",
                bounded: "1",
                limit: "30",
-               viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0"
+               viewbox: "-180.0,90.0,180.0,-90.0"
             }
         },
         "response": {
@@ -155,7 +155,7 @@ module.exports = function() {
                addressdetails: "1",
                bounded: "1",
                limit: "30",
-               viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0"
+               viewbox: "-180.0,90.0,180.0,-90.0"
             }
         },
         "response": {
