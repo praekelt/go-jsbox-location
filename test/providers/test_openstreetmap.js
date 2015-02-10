@@ -377,4 +377,33 @@ describe('OpenStreetMap.fixture', function() {
             {place: 1}, {place: 2},
         ]);
     });
+
+    describe('when used with the OpenStreetMap provider', function() {
+        var im, osm;
+
+        beforeEach(function() {
+            osm = new OpenStreetMap();
+            return test_utils
+                .make_im()
+                .then(function(dummy_im) {
+                    im = dummy_im;
+                    return osm.init(im);
+                });
+        });
+
+        it('should provide fixtures for searches', function() {
+            var fixture = OpenStreetMap.fixture({
+                query: "Baker Street",
+                address_list: ["2B", "Not 2B"],
+            });
+            im.api.http.fixtures.add(fixture);
+            return osm
+                .search("Baker Street")
+                .then(function(results) {
+                    assert_address_result(results[0], "2B");
+                    assert_address_result(results[1], "Not 2B");
+                    assert.strictEqual(results.length, 2);
+                });
+        });
+    });
 });
