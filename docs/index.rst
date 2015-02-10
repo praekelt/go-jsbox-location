@@ -12,7 +12,10 @@ Contents:
    :maxdepth: 2
 
    locationstate
-   testing
+   googlemaps
+   openstreetmap
+   providers
+   test_utils
 
 
 Indices and tables
