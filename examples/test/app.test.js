@@ -16,7 +16,7 @@ describe("app", function() {
             locations = [];
 
             locations.push({
-                request:"Example Street",
+                query: "Example Street",
                 response_data: {
                     results:
                     [{
@@ -42,7 +42,7 @@ describe("app", function() {
             });
 
             locations.push({
-                request:"Single Street",
+                query: "Single Street",
                 response_data: {
                     results:
                     [{

@@ -180,3 +180,38 @@ describe('GoogleMaps', function() {
         });
     });
 });
+
+describe('GoogleMaps.fixture', function() {
+    it('should return a fixture', function() {
+        assert.deepEqual(
+            GoogleMaps.fixture({
+                query: "Baker Street",
+                address_list: ["2B", "Not 2B"],
+            }),
+            {
+                request: {
+                    method: "GET",
+                    url: "http://maps.googleapis.com/maps/api/geocode/json",
+                    params: {
+                        address: "Baker Street",
+                    },
+                },
+                response: {
+                    code: '200',
+                    data: {
+                        status: 'OK',
+                        results: [
+                            {formatted_address: '2B'},
+                            {formatted_address: 'Not 2B'},
+                        ]
+                    },
+                },
+            }
+        );
+    });
+
+    //it('should allow overriding the request_url', function() {
+    //    var fixture = GoogleMaps.fixture({
+    //    });
+    //});
+});

@@ -406,8 +406,8 @@ describe('states.location', function() {
         it('should recognize user added addresses for fixtures',
         function() {
             locations.push({
-                request:"New Street",
-                address_list:["New Street 1", "New Street 2"]
+                query: "New Street",
+                address_list: ["New Street 1", "New Street 2"],
             });
             return tester
                 .input("New Street")
@@ -424,7 +424,7 @@ describe('states.location', function() {
         it('should recognize user added response objects for fixtures',
         function() {
             locations.push({
-                request:"Another Street",
+                query: "Another Street",
                 response_data: {
                     results: [{
                         "formatted_address": "Another Street, Suburb",
