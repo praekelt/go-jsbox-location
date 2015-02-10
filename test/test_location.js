@@ -24,7 +24,7 @@ describe('states.location', function() {
 
             tester.data.opts = {};
 
-            locations = LocationState.testing();
+            locations = location.testing();
 
             app.states.add('states:test', function(name) {
                 _.defaults(tester.data.opts, {next:'states:end'});

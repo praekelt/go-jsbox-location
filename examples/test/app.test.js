@@ -2,7 +2,6 @@ var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
 var LocationApp = require('../lib/app').LocationApp;
 var location = require('../../lib');
-var LocationState = location.LocationState;
 
 describe("app", function() {
     describe("LocationApp", function() {
@@ -13,7 +12,7 @@ describe("app", function() {
         beforeEach(function(){
             app = new LocationApp();
             tester = new AppTester(app);
-            locations = LocationState.testing();
+            locations = location.testing();
 
             locations.add_location({
                 request:"Example Street",
