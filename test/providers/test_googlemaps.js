@@ -217,7 +217,15 @@ describe('GoogleMaps.fixture', function() {
                     address_list: ["2B"],
                 });
             },
-            providers.FixtureParameterMissingError
+            function(err) {
+                expected = [
+                    "'query' option is required when creating a",
+                    " GoogleMaps fixture.",
+                ].join("");
+                if ((err instanceof providers.FixtureParameterMissingError) &&
+                    (err.message === expected))
+                    return true;
+            }
         );
     });
 
