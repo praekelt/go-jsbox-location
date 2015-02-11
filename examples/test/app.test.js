@@ -2,7 +2,7 @@ var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
 var LocationApp = require('../lib/app').LocationApp;
 var location = require('../../lib');
-var GoogleMaps = location.GoogleMaps;
+var googlemaps = location.providers.googlemaps;
 
 describe("app", function() {
     describe("LocationApp", function() {
@@ -64,7 +64,7 @@ describe("app", function() {
                 })
                 .setup(function(api) {
                     locations.forEach(function(location) {
-                        api.http.fixtures.add(GoogleMaps.fixture(location));
+                        api.http.fixtures.add(googlemaps.fixture(location));
                     });
                 });
         });

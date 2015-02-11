@@ -5,10 +5,11 @@ var BaseError = vumigo.utils.BaseError;
 var Extendable = vumigo.utils.Extendable;
 var test_utils = vumigo.test_utils;
 
-var provider = require('../../lib/providers/provider');
-var ProviderNotImplementedError = provider.ProviderNotImplementedError;
-var AddressResult = provider.AddressResult;
-var Provider = provider.Provider;
+var location = require('../../lib');
+var provider_utils = location.providers.utils;
+var ProviderNotImplementedError = provider_utils.ProviderNotImplementedError;
+var AddressResult = provider_utils.AddressResult;
+var Provider = provider_utils.Provider;
 
 describe('ProviderNotImplementedError', function() {
     it('should extend BaseError', function() {
