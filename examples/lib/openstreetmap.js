@@ -1,7 +1,7 @@
 var vumigo = require('vumigo_v02');
 var location = require('../../lib');
 var LocationState = location.LocationState;
-var OpenStreetMap = location.OpenStreetMap;
+var OpenStreetMap = location.providers.openstreetmap.OpenStreetMap;
 
 var App = vumigo.App;
 var EndState = vumigo.states.EndState;

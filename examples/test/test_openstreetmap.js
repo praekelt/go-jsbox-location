@@ -2,7 +2,7 @@ var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
 var LocationApp = require('../lib/openstreetmap').LocationApp;
 var location = require('../../lib');
-var OpenStreetMap = location.OpenStreetMap;
+var openstreetmap = location.providers.openstreetmap;
 
 describe("OpenStreetMap example", function() {
     var app;
@@ -59,7 +59,7 @@ describe("OpenStreetMap example", function() {
             })
             .setup(function(api) {
                 locations.forEach(function(location) {
-                    api.http.fixtures.add(OpenStreetMap.fixture(location));
+                    api.http.fixtures.add(openstreetmap.fixture(location));
                 });
             });
     });
