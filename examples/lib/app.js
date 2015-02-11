@@ -1,7 +1,7 @@
 var vumigo = require('vumigo_v02');
 var location = require('../../lib');
 var LocationState = location.LocationState;
-var GoogleMaps = location.GoogleMaps;
+var GoogleMaps = location.providers.googlemaps.GoogleMaps;
 
 var App = vumigo.App;
 var EndState = vumigo.states.EndState;

@@ -5,7 +5,7 @@ var test_utils = require("../lib/test_utils");
 var assert_address_result = test_utils.assert_address_result;
 
 var providers = require("../lib/providers");
-var AddressResult = providers.AddressResult;
+var AddressResult = providers.utils.AddressResult;
 
 
 describe("assert_address_result", function() {

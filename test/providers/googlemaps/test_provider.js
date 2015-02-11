@@ -1,18 +1,19 @@
 var assert = require('assert');
 
-var fixtures = require('../fixtures');
+var fixtures = require('../../fixtures');
 
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var test_utils = vumigo.test_utils;
 
-var providers = require('../../lib/providers');
-var Provider = providers.Provider;
-var AddressResult = providers.AddressResult;
-var GoogleMaps = providers.GoogleMaps;
+var location = require('../../../lib');
 
-var loc_test_utils = require('../../lib/test_utils');
-var assert_address_result = loc_test_utils.assert_address_result;
+var providers = location.providers;
+var Provider = providers.utils.Provider;
+var AddressResult = providers.utils.AddressResult;
+var GoogleMaps = providers.googlemaps.GoogleMaps;
+
+var assert_address_result = location.test_utils.assert_address_result;
 
 
 describe('GoogleMaps', function() {

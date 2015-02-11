@@ -1,19 +1,20 @@
 var assert = require('assert');
 var _ = require('lodash');
 
-var fixtures = require('../fixtures');
+var fixtures = require('../../fixtures');
 
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var test_utils = vumigo.test_utils;
 
-var providers = require('../../lib/providers');
-var Provider = providers.Provider;
-var AddressResult = providers.AddressResult;
-var OpenStreetMap = providers.OpenStreetMap;
+var location = require('../../../lib');
 
-var loc_test_utils = require('../../lib/test_utils');
-var assert_address_result = loc_test_utils.assert_address_result;
+var providers = location.providers;
+var Provider = providers.utils.Provider;
+var AddressResult = providers.utils.AddressResult;
+var OpenStreetMap = providers.openstreetmap.OpenStreetMap;
+
+var assert_address_result = location.test_utils.assert_address_result;
 
 
 describe('OpenStreetMap', function() {
@@ -136,7 +137,7 @@ describe('OpenStreetMap', function() {
                 addressdetails: 1,
                 bounded: 1,
                 limit: 30,
-                viewbox: "viewbox=-180.0%2C90.0%2C180.0%2C-90.0",
+                viewbox: "-180.0,90.0,180.0,-90.0",
             });
             assert.deepEqual(params, expected);
         }
@@ -193,7 +194,7 @@ describe('OpenStreetMap', function() {
         it('should set the default viewbox', function() {
             var params = api_params();
             assert_params(params, {
-                viewbox: 'viewbox=-180.0%2C90.0%2C180.0%2C-90.0',
+                viewbox: '-180.0,90.0,180.0,-90.0',
             });
         });
 
@@ -202,7 +203,7 @@ describe('OpenStreetMap', function() {
                 bounding_box: ["-20.0", "75.0", "65.0", "-50.0"]
             });
             assert_params(params, {
-                viewbox: 'viewbox=-20.0%2C75.0%2C65.0%2C-50.0',
+                viewbox: '-20.0,75.0,65.0,-50.0',
             });
         });
     });

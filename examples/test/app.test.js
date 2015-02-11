@@ -2,7 +2,7 @@ var vumigo = require('vumigo_v02');
 var AppTester = vumigo.AppTester;
 var LocationApp = require('../lib/app').LocationApp;
 var location = require('../../lib');
-var LocationState = location.LocationState;
+var googlemaps = location.providers.googlemaps;
 
 describe("app", function() {
     describe("LocationApp", function() {
@@ -13,23 +13,23 @@ describe("app", function() {
         beforeEach(function(){
             app = new LocationApp();
             tester = new AppTester(app);
-            locations = LocationState.testing();
+            locations = [];
 
-            locations.add_location({
-                request:"Example Street",
+            locations.push({
+                query: "Example Street",
                 response_data: {
-                    results: 
+                    results:
                     [{
-                        formatted_address:"Example Street, Suburb",
+                        formatted_address: "Example Street, Suburb",
                         geometry: {
                             location:{
                                 latitude: '3.1415926535',
                                 longitude: '2.7182818284'
                             }
                         }
-                    }, 
+                    },
                     {
-                        formatted_address:"Another Street, Suburb",
+                        formatted_address: "Another Street, Suburb",
                         geometry: {
                             location: {
                                 latitude: '2.7182818284',
@@ -41,12 +41,12 @@ describe("app", function() {
                 }
             });
 
-            locations.add_location({
-                request:"Single Street",
+            locations.push({
+                query: "Single Street",
                 response_data: {
-                    results: 
+                    results:
                     [{
-                        formatted_address:"Single Street, Suburb",
+                        formatted_address: "Single Street, Suburb",
                         geometry: {
                             location:{
                                 latitude: '1.4142135623',
@@ -63,8 +63,9 @@ describe("app", function() {
                     name: 'test_app'
                 })
                 .setup(function(api) {
-                    // Add all of the fixtures
-                    locations.fixtures.forEach(api.http.fixtures.add);
+                    locations.forEach(function(location) {
+                        api.http.fixtures.add(googlemaps.fixture(location));
+                    });
                 });
         });
 

@@ -1,15 +1,19 @@
+var assert = require('assert');
+var _ = require('lodash');
+
 var vumigo = require('vumigo_v02');
-var fixtures = require('./fixtures');
 var App = vumigo.App;
 var AppTester = vumigo.AppTester;
 var EndState = vumigo.states.EndState;
+var config = vumigo.fixtures.config;
+var test_utils = vumigo.test_utils;
+
 var location = require('../lib');
 var LocationState = location.LocationState;
-var GoogleMaps = location.GoogleMaps;
-var assert = require('assert');
-var _ = require('lodash');
-var test_utils = vumigo.test_utils;
-var config = vumigo.fixtures.config;
+var googlemaps = location.providers.googlemaps;
+var GoogleMaps = googlemaps.GoogleMaps;
+
+var fixtures = require('./fixtures');
 
 describe('states.location', function() {
     describe('LocationState', function() {
@@ -24,7 +28,7 @@ describe('states.location', function() {
 
             tester.data.opts = {};
 
-            locations = LocationState.testing();
+            locations = [];
 
             app.states.add('states:test', function(name) {
                 _.defaults(tester.data.opts, {next:'states:end'});
@@ -43,8 +47,9 @@ describe('states.location', function() {
                 })
                 .setup(function(api) {
                     fixtures.googlemaps().forEach(api.http.fixtures.add);
-                    locations.fixtures.forEach(
-                        api.http.fixtures.add);
+                    locations.forEach(function(location) {
+                        api.http.fixtures.add(googlemaps.fixture(location));
+                    });
                 });
         });
 
@@ -404,9 +409,9 @@ describe('states.location', function() {
 
         it('should recognize user added addresses for fixtures',
         function() {
-            locations.add_location({
-                request:"New Street",
-                address_list:["New Street 1", "New Street 2"]
+            locations.push({
+                query: "New Street",
+                address_list: ["New Street 1", "New Street 2"],
             });
             return tester
                 .input("New Street")
@@ -422,8 +427,8 @@ describe('states.location', function() {
 
         it('should recognize user added response objects for fixtures',
         function() {
-            locations.add_location({
-                request:"Another Street",
+            locations.push({
+                query: "Another Street",
                 response_data: {
                     results: [{
                         "formatted_address": "Another Street, Suburb",
