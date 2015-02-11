@@ -16,40 +16,16 @@ describe("OpenStreetMap example", function() {
 
         locations.push({
             query: "Example Street",
-            response_data: [
-                {
-                    display_name: "Example Street, Suburb",
-                    geometry: {
-                        location:{
-                            latitude: '3.1415926535',
-                            longitude: '2.7182818284'
-                        }
-                    }
-                },
-                {
-                     display_name: "Another Street, Suburb",
-                     geometry: {
-                         location: {
-                             latitude: '2.7182818284',
-                             longitude: '3.1415926535'
-                         }
-                     }
-                }
+            address_list: [
+                "Example Street, Suburb",
+                "Another Street, Suburb",
             ],
         });
 
         locations.push({
             query: "Single Street",
-            response_data: [
-                {
-                    display_name: "Single Street, Suburb",
-                    geometry: {
-                        location:{
-                            latitude: '1.4142135623',
-                            longitude: '1.6180339887'
-                        }
-                    }
-                },
+            address_list: [
+                "Single Street, Suburb",
             ],
         });
 
@@ -104,10 +80,8 @@ describe("OpenStreetMap example", function() {
                 .check.interaction({
                     state: 'states:end',
                     reply: [
-                        'The location "Example Street, Suburb" is located',
-                        'at longitude 2.7182818284 and latitude',
-                        '3.1415926535'
-                    ].join(' ')
+                        'The location you chose is "Example Street, Suburb".',
+                    ].join(''),
                 })
                 .run();
         });
@@ -120,9 +94,7 @@ describe("OpenStreetMap example", function() {
                 .check.interaction({
                     state: 'states:end',
                     reply: [
-                        'The location "Single Street, Suburb" is located',
-                        'at longitude 1.6180339887 and latitude',
-                        '1.4142135623'
+                        'The location you chose is "Single Street, Suburb".',
                     ].join(' ')
                 })
                 .run();

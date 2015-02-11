@@ -35,19 +35,8 @@ var LocationApp = App.extend(function(self){
                 self.contact = user_contact;
                 // Then we return that information to the user
                 var address = self.contact.extra['location:formatted_address'];
-                var longitude = self.contact.extra
-                    ['location:geometry:location:longitude'];
-                var latitude = self.contact.extra
-                    ['location:geometry:location:latitude'];
                 return new EndState(name, {
-                    text: [
-                        'The location',
-                        '"' + address + '"',
-                        'is located at longitude',
-                        longitude,
-                        'and latitude',
-                        latitude
-                        ].join(' ')
+                    text: 'The location you chose is "' + address + '".',
                 });
             });
     });
