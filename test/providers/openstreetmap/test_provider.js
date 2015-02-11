@@ -1,19 +1,20 @@
 var assert = require('assert');
 var _ = require('lodash');
 
-var fixtures = require('../fixtures');
+var fixtures = require('../../fixtures');
 
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var test_utils = vumigo.test_utils;
 
-var providers = require('../../lib/providers');
-var Provider = providers.Provider;
-var AddressResult = providers.AddressResult;
-var OpenStreetMap = providers.OpenStreetMap;
+var location = require('../../../lib');
 
-var loc_test_utils = require('../../lib/test_utils');
-var assert_address_result = loc_test_utils.assert_address_result;
+var providers = location.providers;
+var Provider = providers.utils.Provider;
+var AddressResult = providers.utils.AddressResult;
+var OpenStreetMap = providers.openstreetmap.OpenStreetMap;
+
+var assert_address_result = location.test_utils.assert_address_result;
 
 
 describe('OpenStreetMap', function() {
@@ -273,137 +274,6 @@ describe('OpenStreetMap', function() {
                         assert.deepEqual(results, []);
                     });
             });
-        });
-    });
-});
-
-describe('OpenStreetMap.fixture', function() {
-    it('should return a fixture', function() {
-        assert.deepEqual(
-            OpenStreetMap.fixture({
-                query: "Baker Street",
-                address_list: ["2B", "Not 2B"],
-            }),
-            {
-               request: {
-                   method: "GET",
-                   url: "http://open.mapquestapi.com/nominatim/v1/search.php",
-                   params: {
-                       format: "json",
-                       q: "Baker Street",
-                       addressdetails: "1",
-                       bounded: "1",
-                       limit: "30",
-                       viewbox: "-180.0,90.0,180.0,-90.0"
-                   },
-               },
-               response: {
-                   code: 200,
-                   data: [
-                       {
-                           display_name: "2B",
-                       },
-                       {
-                           display_name: "Not 2B",
-                       },
-                   ],
-               },
-            }
-        );
-    });
-
-    it('should require a query parameter', function() {
-        assert.throws(
-            function() {
-                OpenStreetMap.fixture({
-                    address_list: ["2B"],
-                });
-            },
-            providers.FixtureParameterMissingError
-        );
-    });
-
-    it('should allow setting the hard boundary', function() {
-       var fixture = OpenStreetMap.fixture({
-           query: "Where am I?",
-           hard_boundary: false,
-       });
-       assert.strictEqual(fixture.request.params.bounded, "0");
-    });
-
-    it('should allow setting the address limit', function() {
-       var fixture = OpenStreetMap.fixture({
-           query: "Where am I?",
-           address_limit: 5,
-       });
-       assert.strictEqual(fixture.request.params.limit, "5");
-    });
-
-    it('should allow setting the bounding box', function() {
-       var fixture = OpenStreetMap.fixture({
-           query: "Where am I?",
-           bounding_box: ["1.0", "2.0", "3.0", "4.0"],
-       });
-       assert.strictEqual(
-           fixture.request.params.viewbox,
-           "1.0,2.0,3.0,4.0"
-       );
-    });
-
-    it('should allow overriding the request url', function() {
-       var fixture = OpenStreetMap.fixture({
-           query: "Where am I?",
-           request_url: "http://www.example.com",
-       });
-       assert.strictEqual(fixture.request.url, "http://www.example.com");
-    });
-
-    it('should default to an empty address list', function() {
-       var fixture = OpenStreetMap.fixture({
-           query: "Place with no places",
-       });
-       assert.deepEqual(fixture.response.data, []);
-    });
-
-    it('should allow overriding the response data', function() {
-        var fixture = OpenStreetMap.fixture({
-            query: "Can has custom data?",
-            address_list: ["Ignored place"],
-            response_data: [
-                {place: 1}, {place: 2},
-            ],
-        });
-        assert.deepEqual(fixture.response.data, [
-            {place: 1}, {place: 2},
-        ]);
-    });
-
-    describe('when used with the OpenStreetMap provider', function() {
-        var im, osm;
-
-        beforeEach(function() {
-            osm = new OpenStreetMap();
-            return test_utils
-                .make_im()
-                .then(function(dummy_im) {
-                    im = dummy_im;
-                    return osm.init(im);
-                });
-        });
-
-        it('should provide fixtures for searches', function() {
-            var fixture = OpenStreetMap.fixture({
-                query: "Baker Street",
-                address_list: ["2B", "Not 2B"],
-            });
-            im.api.http.fixtures.add(fixture);
-            return osm
-                .search("Baker Street")
-                .then(function(results) {
-                    assert_address_result(results[0], "2B");
-                    assert_address_result(results[1], "Not 2B");
-                    assert.strictEqual(results.length, 2);
-                });
         });
     });
 });

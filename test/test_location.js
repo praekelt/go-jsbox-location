@@ -1,15 +1,19 @@
+var assert = require('assert');
+var _ = require('lodash');
+
 var vumigo = require('vumigo_v02');
-var fixtures = require('./fixtures');
 var App = vumigo.App;
 var AppTester = vumigo.AppTester;
 var EndState = vumigo.states.EndState;
+var config = vumigo.fixtures.config;
+var test_utils = vumigo.test_utils;
+
 var location = require('../lib');
 var LocationState = location.LocationState;
-var GoogleMaps = location.GoogleMaps;
-var assert = require('assert');
-var _ = require('lodash');
-var test_utils = vumigo.test_utils;
-var config = vumigo.fixtures.config;
+var googlemaps = location.providers.googlemaps;
+var GoogleMaps = googlemaps.GoogleMaps;
+
+var fixtures = require('./fixtures');
 
 describe('states.location', function() {
     describe('LocationState', function() {
@@ -44,7 +48,7 @@ describe('states.location', function() {
                 .setup(function(api) {
                     fixtures.googlemaps().forEach(api.http.fixtures.add);
                     locations.forEach(function(location) {
-                        api.http.fixtures.add(GoogleMaps.fixture(location));
+                        api.http.fixtures.add(googlemaps.fixture(location));
                     });
                 });
         });
