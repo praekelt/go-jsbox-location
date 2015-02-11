@@ -320,13 +320,13 @@ describe('OpenStreetMap.fixture', function() {
                 });
             },
             function(err) {
-                expected = [
+                assert(err instanceof providers.FixtureParameterMissingError,
+                       "Expected an instance of FixtureParameterMissingError");
+                assert.strictEqual(err.message, [
                     "'query' option is required when creating an",
                     " OpenStreetMap fixture.",
-                ].join("");
-                if ((err instanceof providers.FixtureParameterMissingError) &&
-                    (err.message === expected))
-                    return true;
+                ].join(""));
+                return true;
             }
         );
     });
