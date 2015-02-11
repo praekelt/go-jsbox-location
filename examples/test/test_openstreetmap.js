@@ -59,9 +59,7 @@ describe("OpenStreetMap example", function() {
             })
             .setup(function(api) {
                 locations.forEach(function(location) {
-                    var f = OpenStreetMap.fixture(location);
-                    console.log(f);
-                    api.http.fixtures.add(f);
+                    api.http.fixtures.add(OpenStreetMap.fixture(location));
                 });
             });
     });
