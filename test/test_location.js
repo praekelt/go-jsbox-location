@@ -10,6 +10,7 @@ var test_utils = vumigo.test_utils;
 
 var location = require('../lib');
 var LocationState = location.LocationState;
+var AddressResult = location.providers.utils.AddressResult;
 var googlemaps = location.providers.googlemaps;
 var GoogleMaps = googlemaps.GoogleMaps;
 
@@ -188,49 +189,115 @@ describe('states.location', function() {
                 .run();
         });
 
-        it('should go to the next state when location is selected from list',
-        function() {
-            return tester
-                .inputs("Friend Street", '1')
-                .check.interaction({
-                    state:'states:end'
-                })
-                .check(function(api) {
-                    var contact = api.contacts.store[0];
-                    assert.equal(contact.extra['location:formatted_address'],
+        describe('when a location is selected from the list', function() {
+            it('should go to the next state', function() {
+                return tester
+                    .inputs("Friend Street", '1')
+                    .check.interaction({
+                        state:'states:end'
+                    })
+                    .check(function(api) {
+                        var contact = api.contacts.store[0];
+                        assert.equal(contact.extra['location:formatted_address'],
+                                     'Friend Street, Amesbury, MA 01913, USA');
+                    })
+                    .run();
+            });
+            it('should pass the address to the next function', function() {
+                var address_chosen;
+                tester.data.opts.next = function(address) {
+                    address_chosen = address;
+                    return 'states:end';
+                };
+                return tester
+                    .inputs("Friend Street", '1')
+                    .check.interaction({
+                        state:'states:end'
+                    })
+                    .check(function(api) {
+                        assert(
+                            address_chosen instanceof AddressResult,
+                            "Expected an AddressResult");
+                        assert.strictEqual(
+                            address_chosen.label,
                             'Friend Street, Amesbury, MA 01913, USA');
-                })
-                .run();
+                    })
+                    .run();
+            });
         });
 
-        it('should go to the next state when location is selected on any page',
-        function() {
-            return tester
-                .inputs("Friend Street", 'n', '2')
-                .check.interaction({
-                    state:'states:end'
-                })
-                .check(function(api) {
-                    var contact = api.contacts.store[0];
-                    assert.equal(contact.extra['location:formatted_address'],
+        describe('when a location is selected on any page', function() {
+            it('should go to the next state', function() {
+                return tester
+                    .inputs("Friend Street", 'n', '2')
+                    .check.interaction({
+                        state:'states:end'
+                    })
+                    .check(function(api) {
+                        var contact = api.contacts.store[0];
+                        assert.equal(contact.extra['location:formatted_address'],
+                                     'Friend Street, Boston, MA 02114, USA');
+                    })
+                    .run();
+            });
+            it('should pass the address to the next function', function() {
+                var address_chosen;
+                tester.data.opts.next = function(address) {
+                    address_chosen = address;
+                    return 'states:end';
+                };
+                return tester
+                    .inputs("Friend Street", 'n', '2')
+                    .check.interaction({
+                        state:'states:end'
+                    })
+                    .check(function(api) {
+                        assert(
+                            address_chosen instanceof AddressResult,
+                            "Expected an AddressResult");
+                        assert.strictEqual(
+                            address_chosen.label,
                             'Friend Street, Boston, MA 02114, USA');
-                })
-                .run();
+                    })
+                    .run();
+            });
         });
 
-        it('should go to the next state if there is only one result',
-        function() {
-            return tester
-                .inputs("Friend Street, South Africa")
-                .check.interaction({
-                    state:'states:end'
-                })
-                .check(function(api) {
-                    var contact = api.contacts.store[0];
-                    assert.equal(contact.extra['location:formatted_address'],
-                        'Friend Street, Cape Town 7925, South Africa');
-                })
-                .run();
+        describe('when there is only one result', function() {
+            it('should go to the next state', function() {
+                return tester
+                    .inputs("Friend Street, South Africa")
+                    .check.interaction({
+                        state:'states:end'
+                    })
+                    .check(function(api) {
+                        var contact = api.contacts.store[0];
+                        assert.equal(contact.extra['location:formatted_address'],
+                                     'Friend Street, Cape Town 7925, South Africa');
+                    })
+                    .run();
+            });
+            it('should pass the address to the next function', function() {
+                var address_chosen;
+                tester.data.opts.next = function(address) {
+                    address_chosen = address;
+                    return 'states:end';
+                };
+                return tester
+                    .inputs("Friend Street, South Africa")
+                    .check.interaction({
+                        state:'states:end'
+                    })
+                    .check(function(api) {
+                        assert(
+                            address_chosen instanceof AddressResult,
+                            "Expected an AddressResult");
+                        assert.strictEqual(
+                            address_chosen.label,
+                            'Friend Street, Cape Town 7925, South Africa');
+                    })
+                    .run();
+            });
         });
 
         it('should store the requested custom address data when the result is chosen',
