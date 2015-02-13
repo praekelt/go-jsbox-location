@@ -300,21 +300,6 @@ describe('states.location', function() {
             });
         });
 
-        it('should go to the next state when location is selected from list',
-        function() {
-            return tester
-                .inputs("Friend Street", '1')
-                .check.interaction({
-                    state:'states:end'
-                })
-                .check(function(api) {
-                    var contact = api.contacts.store[0];
-                    assert.equal(contact.extra['location:formatted_address'],
-                            'Friend Street, Amesbury, MA 01913, USA');
-                })
-                .run();
-        });
-
         it('should store the requested custom address data when the result is chosen',
         function() {
             tester.data.opts.map_provider = new GoogleMaps({
