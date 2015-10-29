@@ -132,6 +132,7 @@ describe('OpenStreetMap', function() {
 
         function assert_params(params, expected) {
             expected = _.defaults(expected, {
+                key: null,
                 format: 'json',
                 q: default_query,
                 addressdetails: 1,
@@ -206,6 +207,15 @@ describe('OpenStreetMap', function() {
                 viewbox: '-20.0,75.0,65.0,-50.0',
             });
         });
+
+        it('should set the api key', function() {
+            var params = api_params({
+                api_key: 'testapikey',
+            });
+            assert_params(params, {
+                key: 'testapikey',
+            });
+        });
     });
 
     describe('.search()', function() {
@@ -220,7 +230,9 @@ describe('OpenStreetMap', function() {
         });
 
         it('should return a promise with a list of AddressResults', function() {
-            var osm = new OpenStreetMap();
+            var osm = new OpenStreetMap({
+                api_key: 'testapikey',
+            });
             osm.init(im);
             return osm.search('Foe Street')
                 .then(function(results) {
@@ -246,6 +258,7 @@ describe('OpenStreetMap', function() {
 
         it('should use the custom api_url if one is given', function() {
             var osm = new OpenStreetMap({
+                api_key: 'testapikey',
                 api_url: 'http://example.com/nominatim/v1/search.php',
             });
             osm.init(im);
@@ -258,7 +271,9 @@ describe('OpenStreetMap', function() {
 
         describe('should return a promise with an empty list if', function() {
             it('the response has no data', function() {
-                var osm = new OpenStreetMap();
+                var osm = new OpenStreetMap({
+                    api_key: 'testapikey',
+                });
                 osm.init(im);
                 return osm.search("no_data")
                     .then(function(results) {
@@ -267,7 +282,9 @@ describe('OpenStreetMap', function() {
             });
 
             it('the response data is empty', function() {
-                var osm = new OpenStreetMap();
+                var osm = new OpenStreetMap({
+                    api_key: 'testapikey',
+                });
                 osm.init(im);
                 return osm.search("empty_data")
                     .then(function(results) {

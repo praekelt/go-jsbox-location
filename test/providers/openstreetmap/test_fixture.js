@@ -17,12 +17,14 @@ describe('openstreetmap.fixture', function() {
             openstreetmap.fixture({
                 query: "Baker Street",
                 address_list: ["2B", "Not 2B"],
+                key: 'testapikey',
             }),
             {
                request: {
                    method: "GET",
                    url: "http://open.mapquestapi.com/nominatim/v1/search.php",
                    params: {
+                       key: 'testapikey',
                        format: "json",
                        q: "Baker Street",
                        addressdetails: "1",
@@ -51,6 +53,7 @@ describe('openstreetmap.fixture', function() {
             function() {
                 openstreetmap.fixture({
                     address_list: ["2B"],
+                    key: 'testapikey',
                 });
             },
             function(err) {
@@ -65,10 +68,31 @@ describe('openstreetmap.fixture', function() {
         );
     });
 
+    it('should require a key parameter', function() {
+        assert.throws(
+            function() {
+                openstreetmap.fixture({
+                    address_list: ["2B"],
+                    query: "Where am I?",
+                });
+            },
+            function(err) {
+                assert(err instanceof FixtureParameterMissingError,
+                       "Expected an instance of FixtureParameterMissingError");
+                assert.strictEqual(err.message, [
+                    "'key' option is required when creating an",
+                    " OpenStreetMap fixture.",
+                ].join(""));
+                return true;
+            }
+        );
+    });
+
     it('should allow setting the hard boundary', function() {
        var fixture = openstreetmap.fixture({
            query: "Where am I?",
            hard_boundary: false,
+           key: 'testapikey',
        });
        assert.strictEqual(fixture.request.params.bounded, "0");
     });
@@ -77,6 +101,7 @@ describe('openstreetmap.fixture', function() {
        var fixture = openstreetmap.fixture({
            query: "Where am I?",
            address_limit: 5,
+           key: 'testapikey',
        });
        assert.strictEqual(fixture.request.params.limit, "5");
     });
@@ -85,6 +110,7 @@ describe('openstreetmap.fixture', function() {
        var fixture = openstreetmap.fixture({
            query: "Where am I?",
            bounding_box: ["1.0", "2.0", "3.0", "4.0"],
+           key: 'testapikey',
        });
        assert.strictEqual(
            fixture.request.params.viewbox,
@@ -96,6 +122,7 @@ describe('openstreetmap.fixture', function() {
        var fixture = openstreetmap.fixture({
            query: "Where am I?",
            request_url: "http://www.example.com",
+           key: 'testapikey',
        });
        assert.strictEqual(fixture.request.url, "http://www.example.com");
     });
@@ -103,6 +130,7 @@ describe('openstreetmap.fixture', function() {
     it('should default to an empty address list', function() {
        var fixture = openstreetmap.fixture({
            query: "Place with no places",
+           key: 'testapikey',
        });
        assert.deepEqual(fixture.response.data, []);
     });
@@ -114,6 +142,7 @@ describe('openstreetmap.fixture', function() {
             response_data: [
                 {place: 1}, {place: 2},
             ],
+            key: 'testapikey',
         });
         assert.deepEqual(fixture.response.data, [
             {place: 1}, {place: 2},
@@ -124,7 +153,9 @@ describe('openstreetmap.fixture', function() {
         var im, osm;
 
         beforeEach(function() {
-            osm = new openstreetmap.OpenStreetMap();
+            osm = new openstreetmap.OpenStreetMap({
+                api_key: 'testapikey'
+            });
             return test_utils
                 .make_im()
                 .then(function(dummy_im) {
@@ -137,6 +168,7 @@ describe('openstreetmap.fixture', function() {
             var fixture = openstreetmap.fixture({
                 query: "Baker Street",
                 address_list: ["2B", "Not 2B"],
+                key: 'testapikey',
             });
             im.api.http.fixtures.add(fixture);
             return osm
