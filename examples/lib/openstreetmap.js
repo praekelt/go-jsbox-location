@@ -20,7 +20,9 @@ var LocationApp = App.extend(function(self){
             ].join("\n"),
             next: "states:end",
             previous_text: "Prev",
-            map_provider: new OpenStreetMap(),
+            map_provider: new OpenStreetMap({
+                api_key: self.im.config.api_key,
+            }),
         });
     });
 

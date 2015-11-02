@@ -7,6 +7,7 @@ module.exports = function() {
             "method": "GET",
             "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
             "params": {
+               key: 'testapikey',
                format: "json",
                q: "Foe Street",
                addressdetails: "1",
@@ -111,6 +112,7 @@ module.exports = function() {
             "method": "GET",
             "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
             "params": {
+               key: 'testapikey',
                format: "json",
                q: "no_data",
                addressdetails: "1",
@@ -130,6 +132,7 @@ module.exports = function() {
             "method": "GET",
             "url": "http://open.mapquestapi.com/nominatim/v1/search.php",
             "params": {
+               key: 'testapikey',
                format: "json",
                q: "empty_data",
                addressdetails: "1",
@@ -150,6 +153,7 @@ module.exports = function() {
             "method": "GET",
             "url": "http://example.com/nominatim/v1/search.php",
             "params": {
+               key: 'testapikey',
                format: "json",
                q: "Moon",
                addressdetails: "1",
