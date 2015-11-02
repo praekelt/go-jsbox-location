@@ -89,7 +89,8 @@ describe('states.location', function() {
                         '1. Friend Street, Amesbury, MA 01913, USA',
                         '2. Friend Street, Adams, MA 01220, USA',
                         'n. Next',
-                        'p. Previous'
+                        'p. Previous',
+                        's. Skip'
                     ].join('\n')
                 })
                 .run();
@@ -133,7 +134,8 @@ describe('states.location', function() {
                         "1. Friend Street, Berkley, MA 02779, USA",
                         "2. Friend Street, Boston, MA 02114, USA",
                         "n. Next",
-                        "p. Previous"].join('\n')
+                        "p. Previous",
+                        "s. Skip"].join('\n')
                 })
                 .run();
         });
@@ -149,7 +151,8 @@ describe('states.location', function() {
                         '1. Friend Street, Amesbury, MA 01913, USA',
                         '2. Friend Street, Adams, MA 01220, USA',
                         'n. Next',
-                        'p. Previous'
+                        'p. Previous',
+                        's. Skip'
                     ].join('\n')
                 })
                 .run();
@@ -166,7 +169,8 @@ describe('states.location', function() {
                         '1. Friend Street, Amesbury, MA 01913, USA',
                         '2. Friend Street, Adams, MA 01220, USA',
                         'n. Next',
-                        'p. Previous'
+                        'p. Previous',
+                        's. Skip'
                     ].join('\n')
                 })
                 .run();
@@ -183,7 +187,8 @@ describe('states.location', function() {
                         "Please select your location from the following:",
                         "1. Friend Street, Kittery, ME 03904, USA",
                         "n. Next",
-                        "p. Previous"
+                        "p. Previous",
+                        "s. Skip"
                         ].join('\n')
                 })
                 .run();
@@ -332,7 +337,8 @@ describe('states.location', function() {
                     '2. Friend Street, Adams, MA 01220, USA',
                     '3. Friend Street, Berkley, MA 02779, USA',
                     'n. N',
-                    'p. P'
+                    'p. P',
+                    's. S'
                 ].join('\n')
             })
             .run();
@@ -363,7 +369,8 @@ describe('states.location', function() {
                     'Please select your location from the following:',
                     '1. Friend Street, Amesbury, MA 01913, USA',
                     'n. Next',
-                    'p. Previous'
+                    'p. Previous',
+                    's. Skip'
                 ].join('\n')
             })
             .run();
@@ -469,7 +476,8 @@ describe('states.location', function() {
                     "2. Friend Street, Adams, MA 01220, USA",
                     "3. Friend Street, Berkley, MA 02779, USA",
                     "n. ja",
-                    "p. nee"
+                    "p. nee",
+                    "s. Skip"
                 ].join('\n'))
                 .run();
         });
@@ -487,7 +495,8 @@ describe('states.location', function() {
                     '1. New Street 1',
                     '2. New Street 2',
                     'n. Next',
-                    'p. Previous'
+                    'p. Previous',
+                    's. Skip'
                     ].join('\n'))
                 .run();
         });
