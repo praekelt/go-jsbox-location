@@ -96,8 +96,7 @@ describe("GoogleMaps example", function() {
                         "1. Example Street, Suburb",
                         "2. Another Street, Suburb",
                         "n. Next",
-                        "p. Prev",
-                        "s. Skip"
+                        "p. Prev"
                     ].join('\n')
                 })
                 .run();
