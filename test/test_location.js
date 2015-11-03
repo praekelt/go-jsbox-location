@@ -538,14 +538,4 @@ describe('states.location', function() {
 
     });
     
-    describe('when a skip is not null and selected', function() {
-            it('should go to the next state', function() {
-                return tester
-                    .inputs("Friend Street", 's')
-                    .check.interaction({
-                        state:'states:end'
-                    })
-                    .run();
-            });
-    });
 });
