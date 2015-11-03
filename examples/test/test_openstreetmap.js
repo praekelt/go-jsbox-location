@@ -20,7 +20,6 @@ describe("OpenStreetMap example", function() {
                 "Example Street, Suburb",
                 "Another Street, Suburb",
             ],
-            key: 'testapikey',
         });
 
         locations.push({
@@ -28,13 +27,11 @@ describe("OpenStreetMap example", function() {
             address_list: [
                 "Single Street, Suburb",
             ],
-            key: 'testapikey',
         });
 
         tester
             .setup.config.app({
-                name: 'test_app',
-                api_key: 'testapikey',
+                name: 'test_app'
             })
             .setup(function(api) {
                 locations.forEach(function(location) {

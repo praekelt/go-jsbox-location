@@ -89,7 +89,7 @@ describe('states.location', function() {
                         '1. Friend Street, Amesbury, MA 01913, USA',
                         '2. Friend Street, Adams, MA 01220, USA',
                         'n. Next',
-                        'p. Previous'
+                        'p. Previous',
                     ].join('\n')
                 })
                 .run();
@@ -149,7 +149,7 @@ describe('states.location', function() {
                         '1. Friend Street, Amesbury, MA 01913, USA',
                         '2. Friend Street, Adams, MA 01220, USA',
                         'n. Next',
-                        'p. Previous'
+                        'p. Previous',
                     ].join('\n')
                 })
                 .run();
@@ -487,7 +487,7 @@ describe('states.location', function() {
                     '1. New Street 1',
                     '2. New Street 2',
                     'n. Next',
-                    'p. Previous'
+                    'p. Previous',
                     ].join('\n'))
                 .run();
         });
