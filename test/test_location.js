@@ -200,6 +200,20 @@ describe('states.location', function() {
                 .run();
         });
 
+        it('should go back to initial page if retry is selected',
+        function() {
+            tester.data.opts.retry_text = 'Retry';
+            return tester
+                .inputs("Friend Street", 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',
+                    'n', 'n', 'n', 'n', 'n', 'n', 'n', 'r')
+                .check.interaction({
+                    state:'states:test',
+                    reply:['What is your address?']
+                })
+                .run();
+        });
+
+
         describe('when a location is selected from the list', function() {
             it('should go to the next state', function() {
                 return tester
