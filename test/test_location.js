@@ -392,6 +392,44 @@ describe('states.location', function() {
             .run();
         });
 
+        it('should display skip option when skip text not null',
+        function() {
+            tester.data.opts.options_per_page = 1;
+            tester.data.opts.skip_text = 'Skip';
+            return tester
+            .inputs("Friend Street")
+            .check.interaction({
+                state:'states:test',
+                reply:[
+                    'Please select your location from the following:',
+                    '1. Friend Street, Amesbury, MA 01913, USA',
+                    'n. Next',
+                    'p. Previous',
+                    's. Skip'
+                ].join('\n')
+            })
+            .run();
+        });
+
+        it('should display retry option when retry text not null',
+        function() {
+            tester.data.opts.options_per_page = 1;
+            tester.data.opts.retry_text = 'Retry';
+            return tester
+            .inputs("Friend Street")
+            .check.interaction({
+                state:'states:test',
+                reply:[
+                    'Please select your location from the following:',
+                    '1. Friend Street, Amesbury, MA 01913, USA',
+                    'n. Next',
+                    'p. Previous',
+                    'r. Retry'
+                ].join('\n')
+            })
+            .run();
+        });
+
         it('should limit the amount of characters per page when field is set',
         function() {
             tester.data.opts.char_limit = 200;
