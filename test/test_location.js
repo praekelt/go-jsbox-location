@@ -78,6 +78,17 @@ describe('states.location', function() {
                 .run();
         });
 
+
+        it('should go to the next state when skip selected', function() {
+            tester.data.opts.skip_text = 'Skip';
+            return tester
+                .inputs("Friend Street", 's')
+                .check.interaction({
+                    state:'states:end'
+                })
+                .run();
+        });
+
         it('should give a list of locations when the user enters an address',
         function() {
             return tester
@@ -537,5 +548,4 @@ describe('states.location', function() {
         });
 
     });
-    
 });
