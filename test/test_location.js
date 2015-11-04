@@ -78,6 +78,17 @@ describe('states.location', function() {
                 .run();
         });
 
+
+        it('should go to the next state when skip selected', function() {
+            tester.data.opts.skip_text = 'Skip';
+            return tester
+                .inputs("Friend Street", 's')
+                .check.interaction({
+                    state:'states:end'
+                })
+                .run();
+        });
+
         it('should give a list of locations when the user enters an address',
         function() {
             return tester
@@ -91,6 +102,17 @@ describe('states.location', function() {
                         'n. Next',
                         'p. Previous'
                     ].join('\n')
+                })
+                .run();
+        });
+
+        it('it should go to initial state when user selects retry',
+        function() {
+            tester.data.opts.retry_text = 'Retry';
+            return tester
+                .inputs("Friend Street", 'r')
+                .check.interaction({
+                    state:'states:end'
                 })
                 .run();
         });
@@ -188,6 +210,7 @@ describe('states.location', function() {
                 })
                 .run();
         });
+
 
         describe('when a location is selected from the list', function() {
             it('should go to the next state', function() {
@@ -364,6 +387,44 @@ describe('states.location', function() {
                     '1. Friend Street, Amesbury, MA 01913, USA',
                     'n. Next',
                     'p. Previous'
+                ].join('\n')
+            })
+            .run();
+        });
+
+        it('should display skip option when skip text not null',
+        function() {
+            tester.data.opts.options_per_page = 1;
+            tester.data.opts.skip_text = 'Skip';
+            return tester
+                .inputs("Friend Street")
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Amesbury, MA 01913, USA',
+                        'n. Next',
+                        'p. Previous',
+                        's. Skip'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should display retry option when retry text not null',
+        function() {
+            tester.data.opts.options_per_page = 1;
+            tester.data.opts.retry_text = 'Retry';
+            return tester
+            .inputs("Friend Street")
+            .check.interaction({
+                state:'states:test',
+                reply:[
+                    'Please select your location from the following:',
+                    '1. Friend Street, Amesbury, MA 01913, USA',
+                    'n. Next',
+                    'p. Previous',
+                    'r. Retry'
                 ].join('\n')
             })
             .run();
