@@ -89,6 +89,17 @@ describe('states.location', function() {
                 .run();
         });
 
+        it('should go to the initial state when retry selected', function() {
+            tester.data.opts.retry_text = 'Retry';
+            return tester
+                .inputs("Friend Street", 'r')
+                .check.interaction({
+                    state:'states:test',
+                    reply:['What is your address?']
+                })
+                .run();
+        });
+
         it('should give a list of locations when the user enters an address',
         function() {
             return tester
@@ -196,19 +207,6 @@ describe('states.location', function() {
                         "n. Next",
                         "p. Previous"
                         ].join('\n')
-                })
-                .run();
-        });
-
-        it('should go back to initial page if retry is selected',
-        function() {
-            tester.data.opts.retry_text = 'Retry';
-            return tester
-                .inputs("Friend Street", 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',
-                    'n', 'n', 'n', 'n', 'n', 'n', 'n', 'r')
-                .check.interaction({
-                    state:'states:test',
-                    reply:['What is your address?']
                 })
                 .run();
         });
