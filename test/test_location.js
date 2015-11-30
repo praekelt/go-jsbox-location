@@ -211,6 +211,39 @@ describe('states.location', function() {
                 .run();
         });
 
+        it('should stay on the same page if too big a number is entered',
+        function() {
+            return tester
+                .inputs("Friend Street", '3')
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Amesbury, MA 01913, USA',
+                        '2. Friend Street, Adams, MA 01220, USA',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
+
+        it('should stay on the same page if too small a number is entered',
+        function() {
+            return tester
+                .inputs("Friend Street", '0')
+                .check.interaction({
+                    state:'states:test',
+                    reply:[
+                        'Please select your location from the following:',
+                        '1. Friend Street, Amesbury, MA 01913, USA',
+                        '2. Friend Street, Adams, MA 01220, USA',
+                        'n. Next',
+                        'p. Previous'
+                    ].join('\n')
+                })
+                .run();
+        });
 
         describe('when a location is selected from the list', function() {
             it('should go to the next state', function() {
